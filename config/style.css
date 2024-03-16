@@ -1,0 +1,36 @@
+@import url('/base.css');
+
+body {
+    gap: 6rem;
+    padding: 6rem;
+}
+
+#provider_grid > label {
+    border: 1px solid var(--l2);
+    padding: 3rem;
+    border-radius: 2rem;
+}
+
+#provider_grid {
+    gap: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.interests_item {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#interests_list {
+    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+}

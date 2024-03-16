@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Baked</title>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <h1>설정</h1>
+        <section>
+            <h2>사용할 컨텐츠</h2>
+            <div id="provider_grid"></div>
+        </section>
+        <section>
+            <h2>관심사</h2>
+            <button class="secondary" id="add_interest">
+                <h3>관심사 추가</h3>
+            </button>
+            <div id="no_interests">
+                <blockquote>
+                    <p>관심사를 추가해야 뉴스레터를 볼 수 있어요</p>
+                </blockquote>
+            </div>
+            <div id="interests_list"></div>
+        </section>
+    </body>
+    <script type="module" src="./script.ts"></script>
+
+    <template id="provider_item">
+        <label>
+            <input type="checkbox" />
+            <p class="name"></p>
+        </label>
+    </template>
+    <template id="interests_item">
+        <div class="interests_item">
+            <input type="text" placeholder="교육" />
+            <img src="/icon/remove.svg" alt="" />
+        </div>
+    </template>
+</html>
