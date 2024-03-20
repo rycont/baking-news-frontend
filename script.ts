@@ -12,6 +12,8 @@ if (!isLoggedIn) {
 const interests = await getInterestsAssuredly()
 const providers = await getProvidersAssuredly()
 
+console.log({interests, providers})
+
 async function getInterestsAssuredly() {
     const me = await getMe()
     const { interests } = me

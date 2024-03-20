@@ -1,11 +1,11 @@
 import { assert } from './assert'
 
-export const getElements = <T extends Record<string, typeof HTMLElement>>(
+export const getElements = <K extends (string[])[number], T extends Record<K, typeof HTMLElement>>(
     targets: T
 ) => {
-    const elements = {}
+    const elements: Partial<Record<K, HTMLElement>> = {}
 
-    for (const [key, value] of Object.entries(targets)) {
+    for (const key of Object.keys(targets) as K[]) {
         elements[key] = getElementAssurely(key)
     }
 
