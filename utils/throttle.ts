@@ -2,7 +2,7 @@ export default function throttle<T extends unknown[]>(
     action: (...value: T) => void,
     delay: number
 ) {
-    let timeout: number | null = null
+    let timeout: ReturnType<typeof setTimeout> | null = null
     let lastValue: T | null = null
 
     return (...value: T) => {
