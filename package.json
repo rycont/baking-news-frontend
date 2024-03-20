@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pull-scheme": "npx pocketbase-typegen --env"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.1",
