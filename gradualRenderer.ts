@@ -75,7 +75,6 @@ export class GradualRenderer {
             span.classList.add('appear')
 
             this.partElement.appendChild(span)
-
             await new Promise((resolve) => setTimeout(resolve, 1))
         }
 

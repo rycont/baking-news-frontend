@@ -5,7 +5,7 @@ import { getMe } from './utils/getMe'
 import { isValidInterests } from './utils/isValidInterests'
 import { GradualRenderer } from './gradualRenderer'
 
-const API_URL = 'https://low-heron-61-ngvmcrmy30bc.deno.dev'
+const API_URL = 'https://baked-api.deno.dev'
 
 const isLoggedIn = pb.authStore.isValid
 
@@ -26,6 +26,7 @@ const today = {
 
 const todayString = '2024-03-20'
 const articleElement = document.getElementById('article_content')!
+const loadingElement = document.getElementById('loading')!
 
 function renderInterests() {
     const interestsElement = document.getElementById('interests')
@@ -46,6 +47,8 @@ try {
             renderNewsletter()
         }
     }
+} finally {
+    loadingElement.remove()
 }
 
 async function renderNewsletterFromText(content: string) {
@@ -54,7 +57,6 @@ async function renderNewsletterFromText(content: string) {
 }
 
 async function renderNewsletter() {
-    console.log('Creating New Newsletter...')
     const source = new EventSource(
         `${API_URL}/stream_newsletter/${todayString}?authorization=${pb.authStore.token}`
     )
@@ -63,16 +65,13 @@ async function renderNewsletter() {
 
     source.addEventListener('message', (e) => {
         const data = JSON.parse(e.data)
-        if (data.type !== 'message') return
+        console.log(data)
 
-        const payload = JSON.parse(data.data)
-        if (data.type === 'token') {
-            gradualRenderer.render(payload)
+        if (data.event === 'token') {
+            gradualRenderer.render(data.token)
         }
     })
 }
-
-// fetch("https://low-heron-61-ngvmcrmy30bc.deno.dev/newsletter/2024-03-20")
 
 async function getInterestsAssuredly() {
     const me = await getMe()
