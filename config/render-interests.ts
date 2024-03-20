@@ -2,6 +2,7 @@ import { pb } from '../db'
 import { assert } from '../utils/assert'
 import { getElements } from '../utils/getElements'
 import { getMe } from '../utils/getMe'
+import { isValidInterests } from '../utils/isValidInterests'
 import throttle from '../utils/throttle'
 
 const elements = getElements({
@@ -36,16 +37,6 @@ async function getInterests() {
 
     assert(isValidInterests(loadedInterests))
     return loadedInterests
-}
-
-function isValidInterests(interests: unknown): interests is string[] {
-    assert(Array.isArray(interests))
-
-    for (const interest of interests) {
-        assert(typeof interest === 'string')
-    }
-
-    return true
 }
 
 function buildItem(value: string) {
