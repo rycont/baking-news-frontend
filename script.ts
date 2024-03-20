@@ -14,7 +14,7 @@ if (!isLoggedIn) {
 }
 
 const interests = await getInterestsAssuredly()
-const providers = await getProvidersAssuredly()
+// const providers = await getProvidersAssuredly()
 
 renderInterests()
 
@@ -24,7 +24,7 @@ const today = {
     date: new Date().getDate().toString().padStart(2, '0'),
 }
 
-const todayString = '2024-03-20'
+const todayString = `${today.year}-${today.month}-${today.date}`
 const articleElement = document.getElementById('article_content')!
 const loadingElement = document.getElementById('loading')!
 
