@@ -137,3 +137,8 @@ blockquote {
     margin-left: 0;
     padding: 4rem;
 }
+
+.logo {
+    padding-left: 2rem;
+    padding-top: 4rem;
+}
