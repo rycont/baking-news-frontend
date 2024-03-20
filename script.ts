@@ -91,12 +91,12 @@ async function getInterestsAssuredly() {
     return interests
 }
 
-async function getProvidersAssuredly() {
-    const me = await getMe()
-    const providers = me.using_providers
+// async function getProvidersAssuredly() {
+//     const me = await getMe()
+//     const providers = me.using_providers
 
-    assert(Array.isArray(providers))
-    assert(providers.length > 0)
+//     assert(Array.isArray(providers))
+//     assert(providers.length > 0)
 
-    return providers
-}
+//     return providers
+// }
