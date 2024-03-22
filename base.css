@@ -138,7 +138,10 @@ blockquote {
     padding: 4rem;
 }
 
-.logo {
-    padding-left: 2rem;
-    padding-top: 4rem;
+header {
+    padding-inline: 2rem;
+    padding-block-start: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

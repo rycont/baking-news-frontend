@@ -11,10 +11,14 @@ body {
     border-radius: 2rem;
 }
 
+label .name {
+    white-space: pre;
+}
+
 #provider_grid {
     gap: 3rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
 }
 
 section {
