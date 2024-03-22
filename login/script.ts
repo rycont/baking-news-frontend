@@ -9,11 +9,23 @@ assert(buttons.google)
 
 buttons.google.addEventListener('click', loginWithGoogle)
 
-async function loginWithGoogle() {
-    try {
-        await pb.collection('users').authWithOAuth2({ provider: 'google' })
-        location.href = '/'
-    } catch (error) {
-        alert('Error logging in with Google')
-    }
+const googleLoginLink = await getGoogleLoginLink()
+
+function getGoogleLoginLink() {
+    return new Promise<string>((ok) => {
+        pb.collection('users')
+            .authWithOAuth2({
+                provider: 'google',
+                urlCallback(url) {
+                    ok(url)
+                },
+            })
+            .then(() => {
+                location.href = '/'
+            })
+    })
+}
+
+function loginWithGoogle() {
+    window.open(googleLoginLink, '_blank', 'popup, width=500, height=600')
 }
