@@ -45,9 +45,10 @@ export class GradualRenderer {
 
             if (content === '[') {
                 this.partElement = document.createElement('a')
-                const wrapper = document.createElement('p')
-                wrapper.appendChild(this.partElement)
-                this.articleElement.appendChild(wrapper)
+                this.partElement.classList.add("p")
+                // const wrapper = document.createElement('p')
+                // wrapper.appendChild(this.partElement)
+                this.articleElement.appendChild(this.partElement)
                 continue
             }
 

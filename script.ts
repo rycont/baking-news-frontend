@@ -25,15 +25,13 @@ const today = {
 }
 
 const todayString = `${today.year}-${today.month}-${today.date}`
-const articleElement = document.getElementById('article_content')!
-const loadingElement = document.getElementById('loading')!
+const readableTodayString = `${today.year}년 ${today.month}월 ${today.date}일, 오늘`
 
-function renderInterests() {
-    const interestsElement = document.getElementById('interests')
-    interestsElement?.appendChild(
-        document.createTextNode(interests.map((e) => '#' + e).join(' '))
-    )
-}
+const articleElement = document.getElementById('article_content')!
+let loadingElement = document.getElementById('loading')!
+const dateElement = document.getElementById('date')!
+
+dateElement.appendChild(document.createTextNode(readableTodayString))
 
 try {
     const todayNewsletter = await pb
@@ -47,13 +45,25 @@ try {
             renderNewsletter()
         }
     }
-} finally {
-    loadingElement.remove()
+}
+
+function renderInterests() {
+    const interestsElement = document.getElementById('interests')
+    interestsElement?.appendChild(
+        document.createTextNode(interests.map((e) => '#' + e).join(' '))
+    )
 }
 
 async function renderNewsletterFromText(content: string) {
+    loadingElement.remove()
     const gradualRenderer = new GradualRenderer(articleElement)
     gradualRenderer.render(content)
+}
+
+const STAGE_STATUS_MAP: Record<string, string[] | string> = {
+    getArticles: '소식을 들춰보고 있어요',
+    getRelatedArticles: '관심 있어할 만한 소식을 살펴보고 있어요',
+    createNewsletterWithArticles: '오늘의 뉴스레터를 작성하고 있어요',
 }
 
 async function renderNewsletter() {
@@ -62,12 +72,42 @@ async function renderNewsletter() {
     )
 
     const gradualRenderer = new GradualRenderer(articleElement)
+    let interval: NodeJS.Timeout
 
     source.addEventListener('message', (e) => {
         const data = JSON.parse(e.data)
         console.log(data)
 
+        if (data.event === 'progress') {
+            const { stage } = data as { stage: string }
+            if (!(stage in STAGE_STATUS_MAP)) return
+
+            const messageElement = document.createElement('p')
+            const message = STAGE_STATUS_MAP[stage]
+
+            if (typeof message === 'string') {
+                messageElement.appendChild(document.createTextNode(message))
+            } else {
+                let index = 0
+
+                if (interval) {
+                    clearInterval(interval)
+                }
+
+                interval = setInterval(() => {
+                    messageElement.innerHTML = ''
+                    messageElement.appendChild(
+                        document.createTextNode(message[index])
+                    )
+                    index = (index + 1) % message.length
+                }, 1000)
+            }
+
+            loadingElement.appendChild(messageElement)
+        }
+
         if (data.event === 'token') {
+            loadingElement.remove()
             gradualRenderer.render(data.token)
         }
     })
@@ -93,7 +133,9 @@ async function getInterestsAssuredly() {
 
 // async function getProvidersAssuredly() {
 //     const me = await getMe()
-//     const providers = me.using_providers
+//     const providers = me.expand?.using_providers
+
+//     console.log(me)
 
 //     assert(Array.isArray(providers))
 //     assert(providers.length > 0)
