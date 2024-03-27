@@ -1,6 +1,6 @@
 export class GradualRenderer {
     renderQueue: string[] = []
-    partElement: HTMLElement | null = null
+    currentElement: HTMLElement | null = null
 
     private flushing = false
 
@@ -24,61 +24,131 @@ export class GradualRenderer {
         this.flushing = true
 
         while (true) {
-            const content = this.renderQueue.shift()
-
-            if (content === undefined) {
-                console.log(this.renderQueue.length)
+            if (this.renderQueue.length < 5) {
                 break
             }
 
-            if (this.partElement && content === '\n') {
-                this.partElement = null
+            const content = this.renderQueue.shift()
 
-                continue
+            if (!content) {
+                break
             }
 
-            if (content === '#') {
-                this.partElement = document.createElement('h2')
-                this.articleElement.appendChild(this.partElement)
-                continue
+            const actions = this.getActions(content)
+
+            if (actions.length === 0) {
+                const span = document.createElement('span')
+                span.classList.add('appear')
+                span.appendChild(document.createTextNode(content))
+
+                if (!this.currentElement) {
+                    this.currentElement = document.createElement('p')
+                    this.articleElement.appendChild(this.currentElement)
+                }
+
+                this.currentElement.appendChild(span)
             }
 
-            if (content === '[') {
-                this.partElement = document.createElement('a')
-                this.partElement.classList.add("p")
-                // const wrapper = document.createElement('p')
-                // wrapper.appendChild(this.partElement)
-                this.articleElement.appendChild(this.partElement)
-                continue
+            for (const action of actions) {
+                if (action.escape) {
+                    const parent = this.currentElement?.parentElement
+                    if (parent) {
+                        this.currentElement = parent
+                    }
+                }
+
+                if (action.tag) {
+                    const newElement = document.createElement(action.tag)
+
+                    if (!action.topLevel) {
+                        this.currentElement?.appendChild(newElement)
+                    } else {
+                        this.articleElement.appendChild(newElement)
+                    }
+
+                    this.currentElement = newElement
+                }
             }
 
-            if (
-                content === ')' &&
-                this.partElement instanceof HTMLAnchorElement
-            ) {
-                const linkContent = this.partElement.textContent
-                const [text, url] = linkContent!.split('](')
-
-                this.partElement.textContent = text
-                this.partElement.href = url
-
-                this.partElement = null
-                continue
-            }
-
-            if (!this.partElement) {
-                this.partElement = document.createElement('p')
-                this.articleElement.appendChild(this.partElement)
-            }
-
-            const span = document.createElement('span')
-            span.appendChild(document.createTextNode(content))
-            span.classList.add('appear')
-
-            this.partElement.appendChild(span)
-            await new Promise((resolve) => setTimeout(resolve, 1))
+            await new Promise((resolve) => setTimeout(resolve, 20))
         }
 
         this.flushing = false
+    }
+
+    getActions(content: string) {
+        const actions: {
+            tag?: string
+            escape?: boolean
+            topLevel?: boolean
+        }[] = []
+        if (content === '\n') {
+            actions.push({
+                tag: 'p',
+                topLevel: true,
+            })
+        }
+
+        if (content === '#') {
+            let level = 1
+
+            while (this.renderQueue[0] === '#') {
+                this.renderQueue.shift()
+                level++
+            }
+
+            actions.push({
+                tag: `h${level}`,
+                topLevel: true,
+            })
+        }
+
+        if (content === '*') {
+            if (this.renderQueue[0] === '*') {
+                this.renderQueue.shift()
+
+                if (this.currentElement?.tagName === 'B') {
+                    actions.push({
+                        escape: true,
+                    })
+                } else {
+                    actions.push({
+                        tag: 'b',
+                    })
+                }
+            } else if (this.renderQueue[0] === ' ') {
+                this.renderQueue.shift()
+
+                actions.push({
+                    tag: 'li',
+                })
+            } else {
+                actions.push({
+                    tag: 'i',
+                })
+            }
+        }
+
+        if (content === '[') {
+            actions.push({
+                tag: 'a',
+            })
+        }
+
+        if (content === ')') {
+            const content = this.currentElement?.textContent
+            if (content) {
+                const [text, href] = content.split('](').map((x) => x.trim())
+
+                this.currentElement!.setAttribute('href', href)
+                this.currentElement!.textContent = text
+
+                actions.push({
+                    escape: true,
+                })
+            }
+        }
+
+        return actions
     }
 }
