@@ -97,7 +97,13 @@ async function renderNewsletter() {
 
     source.addEventListener('message', (e) => {
         const data = JSON.parse(e.data)
-        console.log(data)
+
+        if (data.event === 'articles') {
+            const articles = data.articles as ArticlesResponse[]
+            for (const article of articles) {
+                showReferringArticle(article)
+            }
+        }
 
         if (data.event === 'progress') {
             const { stage } = data as { stage: string }
