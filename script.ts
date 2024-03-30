@@ -16,18 +16,27 @@ if (!isLoggedIn) {
 }
 
 const interests = await getInterestsAssuredly()
-// const providers = await getProvidersAssuredly()
 
 renderInterests()
 
-const today = {
-    year: new Date().getFullYear().toString().padStart(4, '0'),
-    month: (new Date().getMonth() + 1).toString().padStart(2, '0'),
-    date: new Date().getDate().toString().padStart(2, '0'),
+const date = new Date(+new Date() - 24 * 60 * 60 * 1000)
+
+const dateDict = {
+    year: date.getFullYear().toString().padStart(4, '0'),
+    month: (date.getMonth() + 1).toString().padStart(2, '0'),
+    date: date.getDate().toString().padStart(2, '0'),
 }
 
-const todayString = `${today.year}-${today.month}-${today.date}`
-const readableTodayString = `${today.year}년 ${today.month}월 ${today.date}일, 오늘`
+const today = new Date()
+
+const todayDict = {
+    year: today.getFullYear().toString().padStart(4, '0'),
+    month: (today.getMonth() + 1).toString().padStart(2, '0'),
+    date: today.getDate().toString().padStart(2, '0'),
+}
+
+const todayString = `${dateDict.year}-${dateDict.month}-${dateDict.date}`
+const readableTodayString = `${todayDict.year}년 ${todayDict.month}월 ${todayDict.date}일, 오늘`
 
 const articleElement = document.getElementById('article_content')!
 const loadingElement = document.getElementById('loading')!
