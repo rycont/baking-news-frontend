@@ -153,6 +153,7 @@ header {
     text-decoration: none;
     flex-direction: column;
     gap: 1rem;
+    line-break: anywhere;
 }
 
 .link_card p.title {

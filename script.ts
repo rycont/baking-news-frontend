@@ -5,6 +5,7 @@ import { getMe } from './utils/getMe'
 import { isValidInterests } from './utils/isValidInterests'
 import { GradualRenderer } from './gradualRenderer'
 import { ArticlesResponse, NewslettersResponse } from './pocketbase-types'
+import { buildLinkCard } from './linkCard'
 
 const API_URL = 'https://baked-api.deno.dev'
 
@@ -29,8 +30,9 @@ const todayString = `${today.year}-${today.month}-${today.date}`
 const readableTodayString = `${today.year}년 ${today.month}월 ${today.date}일, 오늘`
 
 const articleElement = document.getElementById('article_content')!
-let loadingElement = document.getElementById('loading')!
+const loadingElement = document.getElementById('loading')!
 const dateElement = document.getElementById('date')!
+const allArticles = document.getElementById('all_articles')!
 
 dateElement.appendChild(document.createTextNode(readableTodayString))
 
@@ -69,6 +71,10 @@ async function renderNewsletterFromText(
     const { content, expand } = newsletter
 
     assert(expand)
+
+    for (const article of expand.referring_articles) {
+        showReferringArticle(article)
+    }
 
     const gradualRenderer = new GradualRenderer(articleElement)
     gradualRenderer.referringArticles = expand.referring_articles
@@ -144,4 +150,9 @@ async function getInterestsAssuredly() {
     )
 
     return interests
+}
+
+async function showReferringArticle(article: ArticlesResponse) {
+    const linkCard = buildLinkCard(article)
+    allArticles.appendChild(linkCard)
 }

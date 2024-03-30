@@ -72,6 +72,12 @@
     animation: wiggle 2s infinite;
 }
 
+#all_articles {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
 @keyframes pulse {
     0% {
         opacity: 1;

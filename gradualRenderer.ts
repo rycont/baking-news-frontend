@@ -1,3 +1,4 @@
+import { buildLinkCard } from './linkCard'
 import { ArticlesResponse } from './pocketbase-types'
 
 export class GradualRenderer {
@@ -161,7 +162,7 @@ export class GradualRenderer {
                 const article = this.referringArticleMap?.get(href)
 
                 if (article) {
-                    createLinkCard(this.currentElement, article)
+                    showArticleCard(this.currentElement, article)
                 }
 
                 actions.push({
@@ -174,11 +175,10 @@ export class GradualRenderer {
     }
 }
 
-const linkCardTemplate = document.getElementById(
-    'link_card'
-) as HTMLTemplateElement
-
-function createLinkCard(element: HTMLAnchorElement, article: ArticlesResponse) {
+function showArticleCard(
+    element: HTMLAnchorElement,
+    article: ArticlesResponse
+) {
     let currentElement: HTMLElement = element
 
     while (true) {
@@ -195,17 +195,8 @@ function createLinkCard(element: HTMLAnchorElement, article: ArticlesResponse) {
         currentElement = parent
     }
 
-    const linkCard = linkCardTemplate.content.cloneNode(true) as HTMLElement
+    const linkCard = buildLinkCard(article)
 
-    const title = linkCard.querySelector('.title') as HTMLElement
-    const link = linkCard.querySelector('.link') as HTMLElement
-    const anchor = linkCard.querySelector('a') as HTMLAnchorElement
-
-    title.appendChild(document.createTextNode(article.title))
-    link.appendChild(document.createTextNode(article.link))
-    anchor.href = article.link
-
-    // Append linkcard next to the link
     currentElement.parentNode?.insertBefore(
         linkCard,
         currentElement.nextSibling
