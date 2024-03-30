@@ -1,8 +1,17 @@
+import { ArticlesResponse } from './pocketbase-types'
+
 export class GradualRenderer {
     renderQueue: string[] = []
     currentElement: HTMLElement | null = null
 
     private flushing = false
+    public referringArticleMap?: Map<string, ArticlesResponse>
+
+    set referringArticles(referringArticles: ArticlesResponse[]) {
+        this.referringArticleMap = new Map(
+            referringArticles.map((article) => [article.link, article])
+        )
+    }
 
     constructor(private articleElement: HTMLElement) {}
 
@@ -135,13 +144,25 @@ export class GradualRenderer {
             })
         }
 
-        if (content === ')' && this.currentElement instanceof HTMLAnchorElement) {
-            const content = this.currentElement?.textContent
-            if (content) {
-                const [text, href] = content.split('](').map((x) => x.trim())
+        if (
+            content === ')' &&
+            this.currentElement instanceof HTMLAnchorElement
+        ) {
+            const { textContent } = this.currentElement
 
-                this.currentElement!.setAttribute('href', href)
-                this.currentElement!.textContent = text
+            if (textContent) {
+                const [text, href] = textContent
+                    .split('](')
+                    .map((x) => x.trim())
+
+                this.currentElement.setAttribute('href', href)
+                this.currentElement.textContent = text
+
+                const article = this.referringArticleMap?.get(href)
+
+                if (article) {
+                    createLinkCard(this.currentElement, article)
+                }
 
                 actions.push({
                     escape: true,
@@ -151,4 +172,42 @@ export class GradualRenderer {
 
         return actions
     }
+}
+
+const linkCardTemplate = document.getElementById(
+    'link_card'
+) as HTMLTemplateElement
+
+function createLinkCard(element: HTMLAnchorElement, article: ArticlesResponse) {
+    let currentElement: HTMLElement = element
+
+    while (true) {
+        const parent = currentElement.parentElement
+
+        if (!parent) {
+            return
+        }
+
+        if (parent.id === 'article_content') {
+            break
+        }
+
+        currentElement = parent
+    }
+
+    const linkCard = linkCardTemplate.content.cloneNode(true) as HTMLElement
+
+    const title = linkCard.querySelector('.title') as HTMLElement
+    const link = linkCard.querySelector('.link') as HTMLElement
+    const anchor = linkCard.querySelector('a') as HTMLAnchorElement
+
+    title.appendChild(document.createTextNode(article.title))
+    link.appendChild(document.createTextNode(article.link))
+    anchor.href = article.link
+
+    // Append linkcard next to the link
+    currentElement.parentNode?.insertBefore(
+        linkCard,
+        currentElement.nextSibling
+    )
 }

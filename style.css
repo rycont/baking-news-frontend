@@ -17,16 +17,17 @@
     word-break: break-all;
 }
 
-#article_content h2 {
+#article_content > h2 {
     margin-top: 4rem;
 }
 
-#article_content p {
+#article_content > p {
     margin-top: 2rem;
     line-height: 150%;
 }
 
-#article_content a {
+#article_content > a,
+#article_content > p > a {
     color: rgb(82, 133, 228);
 }
 

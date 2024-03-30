@@ -4,6 +4,7 @@ import { assert } from './utils/assert'
 import { getMe } from './utils/getMe'
 import { isValidInterests } from './utils/isValidInterests'
 import { GradualRenderer } from './gradualRenderer'
+import { ArticlesResponse, NewslettersResponse } from './pocketbase-types'
 
 const API_URL = 'https://baked-api.deno.dev'
 
@@ -34,11 +35,15 @@ const dateElement = document.getElementById('date')!
 dateElement.appendChild(document.createTextNode(readableTodayString))
 
 try {
-    const todayNewsletter = await pb
-        .collection('newsletters')
-        .getFirstListItem(`date = "${todayString}"`)
+    const todayNewsletter = await pb.collection('newsletters').getFirstListItem<
+        NewslettersResponse<{
+            referring_articles: ArticlesResponse[]
+        }>
+    >(`date = "${todayString}"`, {
+        expand: 'referring_articles',
+    })
 
-    renderNewsletterFromText(todayNewsletter.content)
+    renderNewsletterFromText(todayNewsletter)
 } catch (e) {
     if (e instanceof ClientResponseError) {
         if (e.status === 404) {
@@ -54,9 +59,19 @@ function renderInterests() {
     )
 }
 
-async function renderNewsletterFromText(content: string) {
+async function renderNewsletterFromText(
+    newsletter: NewslettersResponse<{
+        referring_articles: ArticlesResponse[]
+    }>
+) {
     loadingElement.remove()
+
+    const { content, expand } = newsletter
+
+    assert(expand)
+
     const gradualRenderer = new GradualRenderer(articleElement)
+    gradualRenderer.referringArticles = expand.referring_articles
     gradualRenderer.render(content)
 }
 
@@ -130,15 +145,3 @@ async function getInterestsAssuredly() {
 
     return interests
 }
-
-// async function getProvidersAssuredly() {
-//     const me = await getMe()
-//     const providers = me.expand?.using_providers
-
-//     console.log(me)
-
-//     assert(Array.isArray(providers))
-//     assert(providers.length > 0)
-
-//     return providers
-// }

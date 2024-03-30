@@ -20,16 +20,14 @@ body {
     box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        --orange: #e3714f;
-        --orange-transparent: rgba(227, 113, 79, 0.18);
-        --l1: #f5f5f4;
-        --l2: #dfdedd;
-        --l4: #adaaa9;
-        --l9: #5b5957;
-        --l10: #464443;
-    }
+:root {
+    --orange: #e3714f;
+    --orange-transparent: rgba(227, 113, 79, 0.18);
+    --l1: #f5f5f4;
+    --l2: #dfdedd;
+    --l4: #adaaa9;
+    --l9: #5b5957;
+    --l10: #464443;
 }
 
 h1 {
@@ -50,7 +48,8 @@ h3 {
     margin: 0;
 }
 
-p, a.p {
+p,
+a.p {
     font-weight: 500;
     font-size: 4rem;
     margin: 0;
@@ -144,4 +143,23 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.link_card {
+    display: flex;
+    border: var(--l2) solid 1px;
+    padding: 4rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.link_card p.title {
+    color: var(--l10);
+}
+
+.link_card p.link {
+    color: var(--l9);
+    text-decoration: underline;
 }
