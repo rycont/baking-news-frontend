@@ -18,9 +18,3 @@ img.bread {
 .providers > button + button {
     margin-top: 2rem;
 }
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}

@@ -82,6 +82,11 @@ a:has(button) {
     text-decoration: none;
 }
 
+a.plain {
+    text-decoration: none;
+    color: inherit;
+}
+
 button.login {
     padding: 4rem;
     border: 1px solid var(--l2);
@@ -95,6 +100,13 @@ button.login {
 button.secondary {
     background-color: var(--l9);
     box-shadow: 0px 1rem 2rem 0px rgba(0, 0, 0, 0.06);
+}
+
+button:disabled {
+    background-color: var(--l2);
+    color: var(--l4);
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 input[type='checkbox'] {
@@ -133,8 +145,9 @@ blockquote {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    margin-left: 0;
     padding: 4rem;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
 }
 
 header {
@@ -163,4 +176,24 @@ header {
 .link_card p.link {
     color: var(--l9);
     text-decoration: underline;
+}
+
+dialog {
+    width: 100%;
+    max-width: min(540px, 100vw - 12rem);
+    box-sizing: border-box;
+    padding: 6rem;
+    border: 1px solid var(--l2);
+    border-radius: 4rem;
+    flex-direction: column;
+}
+
+dialog[open] {
+    display: flex;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

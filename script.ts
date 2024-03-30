@@ -6,8 +6,7 @@ import { isValidInterests } from './utils/isValidInterests'
 import { GradualRenderer } from './gradualRenderer'
 import { ArticlesResponse, NewslettersResponse } from './pocketbase-types'
 import { buildLinkCard } from './linkCard'
-
-const API_URL = 'https://baked-api.deno.dev'
+import { API_URL } from './constants'
 
 const isLoggedIn = pb.authStore.isValid
 
