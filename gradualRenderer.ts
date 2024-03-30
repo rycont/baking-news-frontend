@@ -70,7 +70,7 @@ export class GradualRenderer {
                 }
             }
 
-            await new Promise((resolve) => setTimeout(resolve, 20))
+            await new Promise((resolve) => setTimeout(resolve, 1))
         }
 
         this.flushing = false
@@ -135,7 +135,7 @@ export class GradualRenderer {
             })
         }
 
-        if (content === ')') {
+        if (content === ')' && this.currentElement instanceof HTMLAnchorElement) {
             const content = this.currentElement?.textContent
             if (content) {
                 const [text, href] = content.split('](').map((x) => x.trim())
