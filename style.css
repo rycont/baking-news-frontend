@@ -45,6 +45,10 @@
     animation: pulse 2s infinite;
 }
 
+#bread {
+    animation: wiggle 2s infinite;
+}
+
 @keyframes pulse {
     0% {
         opacity: 1;
@@ -56,5 +60,27 @@
 
     100% {
         opacity: 1;
+    }
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(5deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+
+    75% {
+        transform: rotate(-5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
     }
 }

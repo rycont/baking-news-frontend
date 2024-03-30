@@ -12,8 +12,15 @@
 img.bread {
     width: 16rem;
     height: 16rem;
+    animation: spin 8s linear infinite;
 }
 
 .providers > button + button {
     margin-top: 2rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
