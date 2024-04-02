@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@capacitor/core": "^5.7.4",
-    "pocketbase": "^0.21.1"
+    "@xenova/transformers": "^2.16.1",
+    "pocketbase": "^0.21.1",
+    "rss-parser": "^3.13.0"
   }
 }

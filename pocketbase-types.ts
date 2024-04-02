@@ -46,10 +46,16 @@ export type ArticlesRecord = {
 export enum ContentProvidersTypeOptions {
 	"rss" = "rss",
 }
+
+export enum ContentProvidersEncodingOptions {
+	"EUC-KR" = "EUC-KR",
+}
 export type ContentProvidersRecord = {
+	encoding?: ContentProvidersEncodingOptions
+	fetch_content_selector?: string
 	name: string
 	type: ContentProvidersTypeOptions
-	url?: string
+	url: string
 }
 
 export type NewslettersRecord = {
