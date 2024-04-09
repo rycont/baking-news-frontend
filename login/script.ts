@@ -9,7 +9,7 @@ assert(buttons.google)
 
 buttons.google.addEventListener('click', loginWithGoogle)
 
-const googleLoginLink = await getGoogleLoginLink()
+let googleLoginLink = ''
 
 function getGoogleLoginLink() {
     return new Promise<string>((ok) => {
@@ -25,6 +25,10 @@ function getGoogleLoginLink() {
             })
     })
 }
+
+getGoogleLoginLink().then((url) => {
+    googleLoginLink = url
+})
 
 function loginWithGoogle() {
     window.open(googleLoginLink, '_blank', 'popup, width=500, height=600')

@@ -103,10 +103,11 @@ button.secondary {
 }
 
 button:disabled {
-    background-color: var(--l2);
-    color: var(--l4);
+    /* background-color: var(--l2);
+    color: var(--l4); */
     cursor: not-allowed;
     box-shadow: none;
+    filter: grayscale(1) brightness(0.95);
 }
 
 input[type='checkbox'] {

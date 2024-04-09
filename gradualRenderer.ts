@@ -79,8 +79,6 @@ export class GradualRenderer {
                     this.currentElement = newElement
                 }
             }
-
-            await new Promise((resolve) => setTimeout(resolve, 1))
         }
 
         this.flushing = false
