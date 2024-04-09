@@ -14,6 +14,8 @@ const elements = getElements({
     article_content: HTMLDivElement,
     loading: HTMLDivElement,
     all_articles: HTMLDivElement,
+    date: HTMLParagraphElement,
+    interests: HTMLParagraphElement,
 })
 
 const isLoggedIn = pb.authStore.isValid
@@ -26,6 +28,9 @@ const me = await getMe()
 assert(me.expand)
 const interests = me.interests
 assert(interests)
+
+renderDatePill()
+renderInterests()
 
 const providers = me.expand.using_providers.map((provider) =>
     createReadProxy(provider, providerAccessed.bind(null, provider))
@@ -55,13 +60,18 @@ if (articles.length === 0) {
     showReferringArticles(last.relatedArticles)
 
     renderer.render(last.content)
+    renderer.render('*****')
 } else {
+    logProgress(
+        articles.length + '개의 기사중 어떤 소식을 좋아할지 고민하고 있어요'
+    )
     const newsletter = await createNewsletterFromArticles(articles, {
         token: (token) => {
             elements.loading.remove()
             renderer.render(token)
         },
         relatedArticles: (_articles) => {
+            logProgress('뉴스레터를 작성하고 있어요')
             const articles = _articles.map((article) => article.data)
 
             renderer.referringArticles = articles
@@ -70,6 +80,7 @@ if (articles.length === 0) {
             showReferringArticles(articles)
         },
     })
+    renderer.render('*****')
 
     const now = +new Date()
     localStorage.setItem(
@@ -94,8 +105,31 @@ function createReadProxy<T extends object>(target: T, event: () => void) {
 }
 
 function showReferringArticles(articles: Article[]) {
+    elements.all_articles.style.setProperty('display', 'flex')
+
     for (const article of articles) {
         const linkCardInstance = buildLinkCard(article)
         elements.all_articles.append(linkCardInstance)
     }
+}
+
+function renderDatePill() {
+    const date = new Date()
+    const dateString = date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+
+    elements.date.appendChild(document.createTextNode(dateString))
+}
+
+function renderInterests() {
+    assert(interests)
+    assert(interests.length > 0)
+    elements.interests.appendChild(
+        document.createTextNode(
+            interests.map((interest) => '#' + interest).join(' ')
+        )
+    )
 }
