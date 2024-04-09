@@ -1,5 +1,4 @@
 import { Article } from './article'
-import { ArticlesResponse } from './pocketbase-types'
 
 const linkCardTemplate = document.getElementById(
     'link_card'

@@ -7,10 +7,13 @@ import { getFreshArticles } from './scripts/getFreshArticles'
 import { NEWSLETTER_STORAGE_PREFIX } from './constants'
 import { getLastNewsletter } from './scripts/getLastNewsletter'
 import { getElements } from './utils/getElements'
+import { buildLinkCard } from './linkCard'
+import { Article } from './article'
 
 const elements = getElements({
     article_content: HTMLDivElement,
     loading: HTMLDivElement,
+    all_articles: HTMLDivElement,
 })
 
 const isLoggedIn = pb.authStore.isValid
@@ -31,14 +34,9 @@ const providers = me.expand.using_providers.map((provider) =>
 assert(providers)
 
 function logProgress(message: string) {
-    const now = +new Date()
-    const delay = now % 500
-
     const p = document.createElement('p')
     p.appendChild(document.createTextNode(message))
-    setTimeout(() => {
-        elements.loading.appendChild(p)
-    }, delay)
+    elements.loading.appendChild(p)
 }
 
 function providerAccessed(provider: any) {
@@ -54,8 +52,8 @@ if (articles.length === 0) {
     renderer.referringArticles = last.relatedArticles
 
     elements.loading.remove()
+    showReferringArticles(last.relatedArticles)
 
-    console.log(last.content)
     renderer.render(last.content)
 } else {
     const newsletter = await createNewsletterFromArticles(articles, {
@@ -63,8 +61,13 @@ if (articles.length === 0) {
             elements.loading.remove()
             renderer.render(token)
         },
-        relatedArticles: (articles) => {
-            renderer.referringArticles = articles.map((article) => article.data)
+        relatedArticles: (_articles) => {
+            const articles = _articles.map((article) => article.data)
+
+            renderer.referringArticles = articles
+            elements.loading.remove()
+
+            showReferringArticles(articles)
         },
     })
 
@@ -88,4 +91,11 @@ function createReadProxy<T extends object>(target: T, event: () => void) {
             return Reflect.get(target, prop)
         },
     })
+}
+
+function showReferringArticles(articles: Article[]) {
+    for (const article of articles) {
+        const linkCardInstance = buildLinkCard(article)
+        elements.all_articles.append(linkCardInstance)
+    }
 }
