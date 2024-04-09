@@ -1,14 +1,14 @@
+import { Article } from './article'
 import { buildLinkCard } from './linkCard'
-import { ArticlesResponse } from './pocketbase-types'
 
 export class GradualRenderer {
     renderQueue: string[] = []
     currentElement: HTMLElement | null = null
 
     private flushing = false
-    public referringArticleMap?: Map<string, ArticlesResponse>
+    public referringArticleMap?: Map<string, Article>
 
-    set referringArticles(referringArticles: ArticlesResponse[]) {
+    set referringArticles(referringArticles: Article[]) {
         this.referringArticleMap = new Map(
             referringArticles.map((article) => [article.link, article])
         )
@@ -173,10 +173,7 @@ export class GradualRenderer {
     }
 }
 
-function showArticleCard(
-    element: HTMLAnchorElement,
-    article: ArticlesResponse
-) {
+function showArticleCard(element: HTMLAnchorElement, article: Article) {
     let currentElement: HTMLElement = element
 
     while (true) {

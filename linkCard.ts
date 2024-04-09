@@ -1,10 +1,11 @@
+import { Article } from './article'
 import { ArticlesResponse } from './pocketbase-types'
 
 const linkCardTemplate = document.getElementById(
     'link_card'
 ) as HTMLTemplateElement
 
-export function buildLinkCard(article: ArticlesResponse) {
+export function buildLinkCard(article: Article) {
     const linkCard = linkCardTemplate.content.cloneNode(true) as HTMLElement
 
     const title = linkCard.querySelector('.title') as HTMLElement

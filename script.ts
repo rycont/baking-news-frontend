@@ -1,13 +1,17 @@
-import { Capacitor } from '@capacitor/core'
-import Parser from 'rss-parser/dist/rss-parser.min.js'
-
 import { pb } from './db'
 import { assert } from './utils/assert'
 import { getMe } from './utils/getMe'
-import { cfetch } from './utils/cfetch'
-import { Article } from './article'
 import { createNewsletterFromArticles } from './utils/api'
 import { GradualRenderer } from './gradualRenderer'
+import { getFreshArticles } from './scripts/getFreshArticles'
+import { NEWSLETTER_STORAGE_PREFIX } from './constants'
+import { getLastNewsletter } from './scripts/getLastNewsletter'
+import { getElements } from './utils/getElements'
+
+const elements = getElements({
+    article_content: HTMLDivElement,
+    loading: HTMLDivElement,
+})
 
 const isLoggedIn = pb.authStore.isValid
 if (!isLoggedIn) {
@@ -17,71 +21,71 @@ if (!isLoggedIn) {
 const me = await getMe()
 
 assert(me.expand)
-
-const providers = me.expand?.using_providers
 const interests = me.interests
-
 assert(interests)
 
-const extFetch = Capacitor.getPlatform() === 'web' ? cfetch : fetch
+const providers = me.expand.using_providers.map((provider) =>
+    createReadProxy(provider, providerAccessed.bind(null, provider))
+)
 
-const articles = []
+assert(providers)
 
-const maxArticlesPerProvider = Math.floor(100 / providers.length)
+function logProgress(message: string) {
+    const now = +new Date()
+    const delay = now % 500
 
-for (const provider of providers) {
-    try {
-        const response = await extFetch(provider.url)
-        const encoding = provider.encoding
-
-        const text = encoding
-            ? await decode(response, encoding)
-            : await response.text()
-
-        const parser: Parser = new Parser()
-        const { items } = await parser.parseString(text)
-
-        const articlesFromProvider = items
-            .slice(0, maxArticlesPerProvider)
-            .map(createArticleRecordFromItem)
-
-        articles.push(...articlesFromProvider)
-    } catch (e) {
-        console.log('Failed to fetch', provider.name, provider.url)
-    }
+    const p = document.createElement('p')
+    p.appendChild(document.createTextNode(message))
+    setTimeout(() => {
+        elements.loading.appendChild(p)
+    }, delay)
 }
 
-const element = document.getElementById('article_content')!
-const renderer = new GradualRenderer(element)
-
-createNewsletterFromArticles(articles, (token) => {
-    renderer.render(token)
-})
-
-async function decode(response: Response, encoding: string) {
-    const decoder = new TextDecoder(encoding)
-    const text = decoder.decode(await response.arrayBuffer())
-
-    return text
+function providerAccessed(provider: any) {
+    logProgress(`${provider.name} 읽어보고 있어요`)
 }
 
-function createArticleRecordFromItem(item: Parser.Item): Article {
-    const link = item.link || item.guid
-    const content = (item.summary ||
-        item.content ||
-        item.contentSnippet ||
-        ('content:encodedSnippet' in item &&
-            item['content:encodedSnippet'])) as string
+const articles = await getFreshArticles(providers)
 
-    const date = item.isoDate as string
+const renderer = new GradualRenderer(elements.article_content)
 
-    assert(link)
-    assert(item.title)
+if (articles.length === 0) {
+    const last = getLastNewsletter()
+    renderer.referringArticles = last.relatedArticles
 
-    return {
-        title: item.title,
-        link,
-        content,
-        date: new Date(date),
-    }
+    elements.loading.remove()
+
+    console.log(last.content)
+    renderer.render(last.content)
+} else {
+    const newsletter = await createNewsletterFromArticles(articles, {
+        token: (token) => {
+            elements.loading.remove()
+            renderer.render(token)
+        },
+        relatedArticles: (articles) => {
+            renderer.referringArticles = articles.map((article) => article.data)
+        },
+    })
+
+    const now = +new Date()
+    localStorage.setItem(
+        NEWSLETTER_STORAGE_PREFIX + now,
+        JSON.stringify(newsletter)
+    )
+}
+
+function createReadProxy<T extends object>(target: T, event: () => void) {
+    let isAccessed = false
+
+    return new Proxy(target, {
+        get(target, prop) {
+            if (!isAccessed) {
+                isAccessed = true
+                event()
+            }
+
+            return Reflect.get(target, prop)
+        },
+    })
 }

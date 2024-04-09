@@ -5,10 +5,15 @@ const API_URL = 'wss://baked-api.deno.dev/ws'
 
 export async function createNewsletterFromArticles(
     articles: Article[],
-    onToken: (token: string) => void
+    events: {
+        token(token: string): void
+        relatedArticles(
+            articles: {
+                data: Article
+            }[]
+        ): void
+    }
 ) {
-    dismissUsedArticles(articles)
-
     const socket = new WebSocket(API_URL)
     await new Promise((resolve) => (socket.onopen = resolve))
 
@@ -23,41 +28,41 @@ export async function createNewsletterFromArticles(
         })
     )
 
-    socket.addEventListener('message', (event) => {
-        const payload = JSON.parse(event.data)
+    let relatedArticles: Article[] = []
 
-        if (payload.type === 'authorizationSuccess') {
-            socket.send(
-                JSON.stringify({
-                    type: 'setSourceArticles',
-                    data: {
-                        articles,
-                    },
+    return new Promise<{
+        content: string
+        relatedArticles: Article[]
+    }>((resolve) => {
+        socket.addEventListener('message', (event) => {
+            const payload = JSON.parse(event.data)
+
+            if (payload.type === 'authorizationSuccess') {
+                socket.send(
+                    JSON.stringify({
+                        type: 'setSourceArticles',
+                        data: {
+                            articles: articles,
+                        },
+                    })
+                )
+            }
+
+            if (payload.type === 'tokenStream') {
+                events.token(payload.data.token)
+            }
+
+            if (payload.type === 'relatedArticles') {
+                events.relatedArticles(payload.data.articles)
+                relatedArticles = payload.data.articles
+            }
+
+            if (payload.type === 'finished') {
+                resolve({
+                    content: payload.data.content.data.content,
+                    relatedArticles,
                 })
-            )
-        }
-
-        if (payload.type === 'tokenStream') {
-            onToken(payload.data.token)
-        }
+            }
+        })
     })
-}
-
-function dismissUsedArticles(articles: Article[]) {
-    const usedArticles = JSON.parse(
-        localStorage.getItem('usedArticles') || '[]'
-    )
-
-    const newArticles = articles.filter(
-        (article) => !usedArticles.includes(article.link)
-    )
-
-    const newUsedArticles = [
-        ...usedArticles,
-        ...articles.map((article) => article.link),
-    ]
-
-    localStorage.setItem('usedArticles', JSON.stringify(newUsedArticles))
-
-    return newArticles
 }
