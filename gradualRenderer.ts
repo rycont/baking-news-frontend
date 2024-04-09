@@ -145,7 +145,8 @@ export class GradualRenderer {
 
         if (
             content === ')' &&
-            this.currentElement instanceof HTMLAnchorElement
+            this.currentElement instanceof HTMLAnchorElement &&
+            this.currentElement.textContent?.includes('](')
         ) {
             const { textContent } = this.currentElement
 
