@@ -1,5 +1,6 @@
 import { Article } from '../article'
 import { pb } from '../db'
+import { addUsedArticles } from './freshArticles'
 
 const API_URL = 'wss://baked-api.deno.dev/ws'
 
@@ -7,26 +8,10 @@ export async function createNewsletterFromArticles(
     articles: Article[],
     events: {
         token(token: string): void
-        relatedArticles(
-            articles: {
-                data: Article
-            }[]
-        ): void
+        relatedArticles(articles: Article[]): void
     }
 ) {
-    const socket = new WebSocket(API_URL)
-    await new Promise((resolve) => (socket.onopen = resolve))
-
     const token = pb.authStore.token
-
-    socket.send(
-        JSON.stringify({
-            type: 'setAuthorization',
-            data: {
-                token,
-            },
-        })
-    )
 
     let relatedArticles: Article[] = []
 
@@ -34,6 +19,19 @@ export async function createNewsletterFromArticles(
         content: string
         relatedArticles: Article[]
     }>((resolve) => {
+        const socket = new WebSocket(API_URL)
+
+        socket.addEventListener('open', () => {
+            socket.send(
+                JSON.stringify({
+                    type: 'setAuthorization',
+                    data: {
+                        token,
+                    },
+                })
+            )
+        })
+
         socket.addEventListener('message', (event) => {
             const payload = JSON.parse(event.data)
 
@@ -58,8 +56,10 @@ export async function createNewsletterFromArticles(
             }
 
             if (payload.type === 'finished') {
+                addUsedArticles(articles.map((article) => article.link))
+
                 resolve({
-                    content: payload.data.content.data.content,
+                    content: payload.data.content,
                     relatedArticles,
                 })
             }

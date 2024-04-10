@@ -70,9 +70,8 @@ if (articles.length === 0) {
             elements.loading.remove()
             renderer.render(token)
         },
-        relatedArticles: (_articles) => {
+        relatedArticles: (articles) => {
             logProgress('뉴스레터를 작성하고 있어요')
-            const articles = _articles.map((article) => article.data)
 
             renderer.referringArticles = articles
             elements.loading.remove()
@@ -80,6 +79,7 @@ if (articles.length === 0) {
             showReferringArticles(articles)
         },
     })
+
     renderer.render('*****')
 
     const now = +new Date()

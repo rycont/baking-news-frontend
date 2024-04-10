@@ -9,12 +9,15 @@ export function dismissUsedArticles(articles: Article[]) {
         (article) => !usedArticles.includes(article.link)
     )
 
-    const newUsedArticles = [
-        ...usedArticles,
-        ...articles.map((article) => article.link),
-    ]
+    return newArticles
+}
+
+export function addUsedArticles(articlesIds: string[]) {
+    const usedArticles = JSON.parse(
+        localStorage.getItem('usedArticles') || '[]'
+    )
+
+    const newUsedArticles = [...usedArticles, ...articlesIds]
 
     localStorage.setItem('usedArticles', JSON.stringify(newUsedArticles))
-
-    return newArticles
 }

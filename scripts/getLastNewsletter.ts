@@ -1,4 +1,3 @@
-import { Article } from '../article'
 import { NEWSLETTER_STORAGE_PREFIX } from '../constants'
 import type { createNewsletterFromArticles } from '../utils/api'
 
@@ -20,18 +19,5 @@ export function getLastNewsletter() {
         localStorage.getItem(lastNewsletterKey)!
     ) as Awaited<ReturnType<typeof createNewsletterFromArticles>>
 
-    const relatedArticles = lastNewsletter.relatedArticles.map(
-        (relatedArticle) => {
-            if ('data' in relatedArticle) {
-                return relatedArticle.data as Article
-            }
-
-            return relatedArticle as Article
-        }
-    )
-
-    return {
-        ...lastNewsletter,
-        relatedArticles,
-    }
+    return lastNewsletter
 }
