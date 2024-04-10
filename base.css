@@ -193,6 +193,15 @@ dialog[open] {
     display: flex;
 }
 
+textarea {
+    resize: none;
+    font-size: 4rem;
+    padding: 3rem;
+    border-color: var(--l2);
+    border-radius: 1rem;
+    line-height: 150%;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
