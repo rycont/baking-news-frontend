@@ -193,8 +193,50 @@ dialog[open] {
     display: flex;
 }
 
+textarea {
+    resize: none;
+    font-size: 4rem;
+    padding: 3rem;
+    border-color: var(--l2);
+    border-radius: 1rem;
+    line-height: 150%;
+}
+
+.toast {
+    position: fixed;
+    top: -12rem;
+    opacity: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3rem 5rem;
+    background-color: white;
+    box-shadow: 0px 1rem 2rem 0px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--l2);
+    border-radius: 4rem;
+    transition: 300ms;
+
+    animation: breathingToast 2s infinite;
+}
+
+.toast.show {
+    top: 4rem;
+    opacity: 1;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes breathingToast {
+    0% {
+        border-color: var(--l4);
+    }
+    50% {
+        border-color: var(--l2);
+    }
+    100% {
+        border-color: var(--l4);
     }
 }

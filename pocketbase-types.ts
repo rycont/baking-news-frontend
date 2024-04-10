@@ -56,6 +56,7 @@ export enum UsersReadingLevelOptions {
 }
 export type UsersRecord<Tinterests = unknown> = {
 	avatar?: string
+	background?: string
 	interests?: null | Tinterests
 	name?: string
 	reading_level?: UsersReadingLevelOptions

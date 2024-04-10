@@ -1,6 +1,7 @@
 import { pb } from '../db'
 import { assert } from '../utils/assert'
 import { getMe } from '../utils/getMe'
+import { hideLoading, showLoading } from './showLoading'
 
 const elements = getElements()
 
@@ -28,7 +29,7 @@ async function getUsingProviders() {
     return new Set(usingProviders)
 }
 
-function onCheckboxClicked(event: Event, id: string) {
+async function onCheckboxClicked(event: Event, id: string) {
     if (!(event.target instanceof HTMLInputElement)) {
         return
     }
@@ -41,7 +42,9 @@ function onCheckboxClicked(event: Event, id: string) {
         usingProviders.delete(id)
     }
 
-    updateUsingProviders()
+    showLoading()
+    await updateUsingProviders()
+    hideLoading()
 }
 
 async function updateUsingProviders() {
