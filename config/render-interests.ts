@@ -4,6 +4,7 @@ import { getElements } from '../utils/getElements'
 import { getMe } from '../utils/getMe'
 import { isValidInterests } from '../utils/isValidInterests'
 import throttle from '../utils/throttle'
+import { hideLoading, showLoading } from './showLoading'
 
 const elements = getElements({
     interests_list: HTMLDivElement,
@@ -56,7 +57,7 @@ function buildItem(value: string) {
     return item
 }
 
-function onRemoveItem(e: Event) {
+async function onRemoveItem(e: Event) {
     if (elements.interests_list.children.length === 1) {
         alert('최소 한개의 관심사는 있어야 합니다')
         return
@@ -68,7 +69,8 @@ function onRemoveItem(e: Event) {
     assert(element)
 
     element.remove()
-    updateInterests()
+
+    await updateInterests()
 
     if (elements.interests_list.children.length === 0) {
         setEmptyMessage(true)
@@ -96,9 +98,11 @@ const updateInterests = throttle(async () => {
         )
     )
 
+    showLoading()
     await pb.collection('users').update(myId, {
         interests,
     })
+    hideLoading()
 }, 1000)
 
 function getElementFromEvent(e: Event) {
