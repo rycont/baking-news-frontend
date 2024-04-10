@@ -57,6 +57,44 @@
     gap: 4rem;
 }
 
+#footer {
+    display: none;
+}
+
+#footer > * {
+    margin-top: 6rem;
+}
+
+#footer #feedback {
+    background-color: var(--l1);
+    border: 1px solid var(--l2);
+    padding: 3rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#footer #feedback label {
+    display: block;
+    box-shadow: none;
+    background-color: white;
+    border: 1px solid var(--l2);
+    color: var(--l10);
+    padding: 2rem 3rem;
+    border-radius: 1rem;
+    transition: 100ms;
+}
+
+#footer #feedback label:has(input:checked) {
+    border-color: var(--orange);
+    background-color: var(--orange-transparent);
+}
+
+#footer #feedback > label input {
+    display: none;
+}
+
 @keyframes pulse {
     0% {
         opacity: 1;

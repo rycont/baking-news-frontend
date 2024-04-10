@@ -3,12 +3,13 @@ import { assert } from './utils/assert'
 import { getMe } from './utils/getMe'
 import { createNewsletterFromArticles } from './utils/api'
 import { GradualRenderer } from './gradualRenderer'
-import { getFreshArticles } from './scripts/getFreshArticles'
-import { NEWSLETTER_STORAGE_PREFIX } from './constants'
+import { NEWSLETTER_STORAGE_PREFIX, READING_LEVEL_ORDER } from './constants'
 import { getLastNewsletter } from './scripts/getLastNewsletter'
 import { getElements } from './utils/getElements'
 import { buildLinkCard } from './linkCard'
 import { Article } from './article'
+import { Collections, UsersReadingLevelOptions } from './pocketbase-types'
+import { getFreshArticles } from './scripts/getFreshArticles'
 
 const elements = getElements({
     article_content: HTMLDivElement,
@@ -16,6 +17,9 @@ const elements = getElements({
     all_articles: HTMLDivElement,
     date: HTMLParagraphElement,
     interests: HTMLParagraphElement,
+    footer: HTMLDivElement,
+    feedback: HTMLDivElement,
+    response_message: HTMLParagraphElement,
 })
 
 const isLoggedIn = pb.authStore.isValid
@@ -49,7 +53,6 @@ function providerAccessed(provider: any) {
 }
 
 const articles = await getFreshArticles(providers)
-
 const renderer = new GradualRenderer(elements.article_content)
 
 if (articles.length === 0) {
@@ -61,10 +64,12 @@ if (articles.length === 0) {
 
     renderer.render(last.content)
     renderer.render('*****')
+    showFeedback()
 } else {
     logProgress(
         articles.length + '개의 기사중 어떤 소식을 좋아할지 고민하고 있어요'
     )
+
     const newsletter = await createNewsletterFromArticles(articles, {
         token: (token) => {
             elements.loading.remove()
@@ -81,6 +86,7 @@ if (articles.length === 0) {
     })
 
     renderer.render('*****')
+    showFeedback()
 
     const now = +new Date()
     localStorage.setItem(
@@ -132,4 +138,48 @@ function renderInterests() {
             interests.map((interest) => '#' + interest).join(' ')
         )
     )
+}
+
+function showFeedback() {
+    elements.footer.style.setProperty('display', 'block')
+    const options = elements.feedback.querySelectorAll('input[type="radio"]')
+
+    for (const option of options) {
+        assert(option instanceof HTMLInputElement)
+        option.addEventListener('click', () => {
+            respondToFeedback(option.id)
+        })
+    }
+}
+
+function respondToFeedback(feedback: string) {
+    if (feedback === 'proper') {
+        elements.response_message.textContent = '좋게 읽어주셔서 감사합니다'
+    } else if (feedback === 'easy') {
+        elements.response_message.textContent =
+            '참고해서 다음엔 더 적절하게 작성해볼게요'
+
+        moveReadingLevel(1)
+    } else if (feedback === 'hard') {
+        elements.response_message.textContent = '더 쉽게 쓰도록 노력할게요'
+
+        moveReadingLevel(-1)
+    }
+}
+
+async function moveReadingLevel(delta: number) {
+    const currentReadingLevel = me.reading_level || UsersReadingLevelOptions.E15
+
+    const currentIndex = READING_LEVEL_ORDER.indexOf(currentReadingLevel)
+
+    const nextIndex = currentIndex + delta
+    if (nextIndex < 0 || nextIndex >= READING_LEVEL_ORDER.length) {
+        return
+    }
+
+    const nextReadingLevel = READING_LEVEL_ORDER[nextIndex]
+
+    await pb.collection(Collections.Users).update(me.id, {
+        reading_level: nextReadingLevel,
+    })
 }

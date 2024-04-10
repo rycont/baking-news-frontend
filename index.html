@@ -15,12 +15,12 @@
             /></a>
         </header>
         <div class="content">
-            <article class="card" id="news_letter">
+            <section class="card" id="news_letter">
                 <p id="interests"></p>
                 <div class="chip">
                     <p class="bold" id="date"></p>
                 </div>
-                <section id="article_content">
+                <article id="article_content">
                     <div id="loading">
                         <img
                             src="/image/bread.svg"
@@ -29,8 +29,31 @@
                         />
                         <p>신선한 뉴스레터를 굽는중입니다</p>
                     </div>
+                </article>
+                <section id="footer">
+                    <hr />
+                    <p>오늘의 뉴스레터는 어땠나요?</p>
+                    <fieldset id="feedback">
+                        <legend>
+                            <p class="bold" id="label">난이도</p>
+                        </legend>
+
+                        <label>
+                            <input type="radio" name="difficulty" id="easy" />
+                            <p>쉬웠어요</p>
+                        </label>
+                        <label>
+                            <input type="radio" name="difficulty" id="proper" />
+                            <p>좋았어요</p>
+                        </label>
+                        <label>
+                            <input type="radio" name="difficulty" id="hard" />
+                            <p>어려웠어요</p>
+                        </label>
+                        <p id="response_message"></p>
+                    </fieldset>
                 </section>
-            </article>
+            </section>
             <section class="card" id="all_articles">
                 <h2>오늘의 모든 아티클</h2>
             </section>
