@@ -1,35 +1,52 @@
-import { assert } from '../utils/assert'
 import { pb } from '../db'
+import { getElements } from '../utils/getElements'
 
-const buttons = {
-    google: document.getElementById('login_with_google'),
-}
+const buttons = getElements({
+    login_with_google: HTMLButtonElement,
+    login_with_kakao: HTMLButtonElement,
+})
 
-assert(buttons.google)
+buttons.login_with_google.addEventListener('click', () =>
+    loginWithProvider('google')
+)
 
-buttons.google.addEventListener('click', loginWithGoogle)
+buttons.login_with_kakao.addEventListener('click', () =>
+    loginWithProvider('kakao')
+)
 
-let googleLoginLink = ''
+type LoadState =
+    | {
+          state: 'loading'
+      }
+    | {
+          state: 'loaded'
+          link: string
+      }
 
-function getGoogleLoginLink() {
-    return new Promise<string>((ok) => {
+const loginLinks: Record<string, LoadState> = {}
+
+function loginWithProvider(providerKey: string) {
+    if (!(providerKey in loginLinks)) {
+        loginLinks[providerKey] = { state: 'loading' }
+
         pb.collection('users')
             .authWithOAuth2({
-                provider: 'google',
+                provider: providerKey,
                 urlCallback(url) {
-                    ok(url)
+                    loginLinks[providerKey] = { state: 'loaded', link: url }
                 },
             })
             .then(() => {
                 location.href = '/'
             })
-    })
-}
+    } else {
+        const provider = loginLinks[providerKey]
 
-getGoogleLoginLink().then((url) => {
-    googleLoginLink = url
-})
+        if (provider.state === 'loaded') {
+            window.open(provider.link, '_blank', 'popup, width=500, height=600')
+            return
+        }
+    }
 
-function loginWithGoogle() {
-    window.open(googleLoginLink, '_blank', 'popup, width=500, height=600')
+    setTimeout(() => loginWithProvider(providerKey), 50)
 }

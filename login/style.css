@@ -18,3 +18,9 @@ img.bread {
 .providers > button + button {
     margin-top: 2rem;
 }
+
+#login_with_kakao {
+    background-color: #ffeb00;
+    color: #3c1e1e;
+    border: none;
+}

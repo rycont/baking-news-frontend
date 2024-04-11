@@ -29,9 +29,19 @@ if (!isLoggedIn) {
 
 const me = await getMe()
 
-assert(me.expand)
 const interests = me.interests
-assert(interests)
+
+try {
+    assert(interests)
+    assert(interests.length > 0)
+
+    assert(me.expand)
+    assert(me.expand.using_providers)
+    assert(me.expand.using_providers.length > 0)
+} catch (e) {
+    location.href = '/setting-required/index.html'
+    throw ''
+}
 
 renderDatePill()
 renderInterests()
