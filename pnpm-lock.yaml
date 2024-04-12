@@ -17,6 +17,9 @@ dependencies:
   rss-parser:
     specifier: ^3.13.0
     version: 3.13.0
+  vite-plugin-open-graph:
+    specifier: ^2.0.4
+    version: 2.0.4
 
 devDependencies:
   '@biomejs/biome':
@@ -1679,6 +1682,11 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  /vite-plugin-open-graph@2.0.4:
+    resolution: {integrity: sha512-IrJ4DWkb3iVtiOO2v3xIkmvQvdZHuhh0S1hD+Dr9GcMJ4mdbtRDhp66rou061k32B9uckGJW0jjY8RYzzbB9Lg==}
+    engines: {node: '>=16'}
+    dev: false
 
   /vite@5.1.6(@types/node@20.11.30):
     resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}
