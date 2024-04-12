@@ -2,13 +2,13 @@ import { pb } from '../db'
 import { getElements } from '../utils/getElements'
 
 const buttons = getElements({
-    login_with_google: HTMLButtonElement,
+    // login_with_google: HTMLButtonElement,
     login_with_kakao: HTMLButtonElement,
 })
 
-buttons.login_with_google.addEventListener('click', () =>
-    loginWithProvider('google')
-)
+// buttons.login_with_google.addEventListener('click', () =>
+//     loginWithProvider('google')
+// )
 
 buttons.login_with_kakao.addEventListener('click', () =>
     loginWithProvider('kakao')
