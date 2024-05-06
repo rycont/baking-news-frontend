@@ -10,16 +10,12 @@
     "pull-scheme": "npx pocketbase-typegen --env"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.6.1",
-    "@capacitor/cli": "^5.7.4",
     "@types/node": "^20.11.30",
     "glob": "^10.3.10",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
   },
   "dependencies": {
-    "@capacitor/core": "^5.7.4",
-    "@xenova/transformers": "^2.16.1",
     "pocketbase": "^0.21.1",
     "rss-parser": "^3.13.0",
     "vite-plugin-open-graph": "^2.0.4"
