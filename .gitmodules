@@ -1,0 +1,3 @@
+[submodule "shade-ui"]
+	path = shade-ui
+	url = https://github.com/rycont/shade-ui
