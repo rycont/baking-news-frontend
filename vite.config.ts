@@ -1,6 +1,7 @@
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
+import ogPlugin from 'vite-plugin-open-graph'
 import { defineConfig } from 'vite'
 import { glob } from 'glob'
-import ogPlugin from 'vite-plugin-open-graph'
 
 import { resolve } from 'path'
 
@@ -20,6 +21,12 @@ export default defineConfig({
         },
     },
     plugins: [
+        vanillaExtractPlugin({
+            unstable_mode: 'emitCss',
+            identifiers(props) {
+                return 'bk-' + (props.debugId?.toLowerCase() || props.hash)
+            },
+        }),
         ogPlugin({
             basic: {
                 title: 'Baking News: 꼭 너만을 위한 AI 뉴스레터',

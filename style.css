@@ -1,17 +1,6 @@
 @import url('./base.css');
 @import url('./feed.css');
 
-.appear {
-    opacity: 0;
-    animation: appear 1s forwards;
-}
-
-@keyframes appear {
-    to {
-        opacity: 1;
-    }
-}
-
 #article_content {
     text-align: justify;
     word-break: keep-all;

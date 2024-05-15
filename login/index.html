@@ -4,31 +4,40 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Baking News</title>
-        <link rel="stylesheet" href="./style.css" />
+        <link rel="stylesheet" href="/shade-ui/dist/style.css" />
+        <script type="module" src="/shade-ui/dist/container-narrow.js"></script>
+        <script type="module" src="/shade-ui/dist/typo.js"></script>
+        <script
+            type="module"
+            src="../components/login-with-kakao/index.ts"
+        ></script>
+        <script type="module" src="../components/app-wrapper.ts"></script>
+        <link rel="stylesheet" href="/shade-ui/suit.css" />
+        <style>
+            .appear {
+                animation: appear 3s forwards;
+            }
+
+            @keyframes appear {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            :root {
+                --container-backdrop-color: var(--sh-color-l3);
+                --container-background-color: var(--sh-color-l2);
+                --sh-base-size: 3.5px;
+            }
+        </style>
     </head>
 
     <body>
-        <h2 class="title logo">Baking News</h2>
-        <div class="content">
-            <article class="card">
-                <img src="/image/bread.svg" alt="빵 이미지" class="bread" />
-                <h2>
-                    꼭 너만을 위한 AI 뉴스레터<br />
-                    Baking News
-                </h2>
-                <div class="providers">
-                    <!-- <button id="login_with_google" class="login">
-                        <img src="/image/google.svg" alt="Google 아이콘" />
-                        <p>Google로 로그인</p>
-                    </button> -->
-                    <button id="login_with_kakao" class="login">
-                        <img src="/image/kakao.svg" alt="Google 아이콘" />
-                        <p>카카오 로그인</p>
-                    </button>
-                </div>
-            </article>
-        </div>
+        <app-wrapper id="content_wrapper"> </app-wrapper>
+        <login-with-kakao>카카오 로그인</login-with-kakao>
     </body>
-
     <script type="module" src="./script.ts"></script>
 </html>

@@ -1,5 +1,7 @@
 import { Article } from './article'
 import { buildLinkCard } from './linkCard'
+import INLINE_LINK, { ShadeInlineLink } from './shade-ui/elements/inline-link'
+import { TEXT_CONTENT, TITLE } from './shade-ui/dist/typo'
 
 export class GradualRenderer {
     renderQueue: string[] = []
@@ -76,7 +78,9 @@ export class GradualRenderer {
                         this.articleElement.appendChild(newElement)
                     }
 
-                    this.currentElement = newElement
+                    if (!action.noChild) {
+                        this.currentElement = newElement
+                    }
                 }
             }
         }
@@ -89,24 +93,30 @@ export class GradualRenderer {
             tag?: string
             escape?: boolean
             topLevel?: boolean
+            noChild?: boolean
         }[] = []
         if (content === '\n') {
-            actions.push({
-                tag: 'p',
-                topLevel: true,
-            })
+            if (this.renderQueue[0] === '\n') {
+                actions.push({
+                    tag: TEXT_CONTENT,
+                    topLevel: true,
+                })
+            } else {
+                if (
+                    this.currentElement &&
+                    this.currentElement.childNodes.length > 0
+                ) {
+                    actions.push({
+                        tag: 'br',
+                        noChild: true,
+                    })
+                }
+            }
         }
 
         if (content === '#') {
-            let level = 1
-
-            while (this.renderQueue[0] === '#') {
-                this.renderQueue.shift()
-                level++
-            }
-
             actions.push({
-                tag: `h${level}`,
+                tag: TITLE,
                 topLevel: true,
             })
         }
@@ -139,13 +149,13 @@ export class GradualRenderer {
 
         if (content === '[') {
             actions.push({
-                tag: 'a',
+                tag: INLINE_LINK,
             })
         }
 
         if (
             content === ')' &&
-            this.currentElement instanceof HTMLAnchorElement &&
+            this.currentElement instanceof ShadeInlineLink &&
             this.currentElement.textContent?.includes('](')
         ) {
             const { textContent } = this.currentElement
@@ -155,13 +165,19 @@ export class GradualRenderer {
                     .split('](')
                     .map((x) => x.trim())
 
+                console.log(href, text)
+
                 this.currentElement.setAttribute('href', href)
-                this.currentElement.textContent = text
+                this.currentElement.setAttribute('text', text)
 
                 const article = this.referringArticleMap?.get(href)
 
                 if (article) {
-                    showArticleCard(this.currentElement, article)
+                    showArticleCard(
+                        this.articleElement,
+                        this.currentElement,
+                        article
+                    )
                 }
 
                 actions.push({
@@ -174,7 +190,12 @@ export class GradualRenderer {
     }
 }
 
-function showArticleCard(element: HTMLAnchorElement, article: Article) {
+function showArticleCard(
+    articleElement: HTMLElement,
+    element: HTMLElement,
+    article: Article
+) {
+    console.log('예?')
     let currentElement: HTMLElement = element
 
     while (true) {
@@ -184,7 +205,7 @@ function showArticleCard(element: HTMLAnchorElement, article: Article) {
             return
         }
 
-        if (parent.id === 'article_content') {
+        if (parent === articleElement) {
             break
         }
 

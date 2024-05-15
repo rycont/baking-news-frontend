@@ -1,52 +1,31 @@
-import { pb } from '../db'
+import { GradualRenderer } from '../gradualRenderer'
 import { getElements } from '../utils/getElements'
 
-const buttons = getElements({
-    // login_with_google: HTMLButtonElement,
-    login_with_kakao: HTMLButtonElement,
+const elements = getElements({
+    content_wrapper: HTMLElement,
 })
 
-// buttons.login_with_google.addEventListener('click', () =>
-//     loginWithProvider('google')
-// )
+const renderer = new GradualRenderer(elements.content_wrapper)
 
-buttons.login_with_kakao.addEventListener('click', () =>
-    loginWithProvider('kakao')
-)
+renderer.referringArticles = [
+    {
+        title: 'Baking News: 꼭 너만을 위한 AI 뉴스레터',
+        link: 'https://baking-news.vercel.app',
+        content: `Baking News는 문해력과 관심사를 반영해 맞춤 뉴스레터를 제공합니다`,
+        date: new Date(),
+    },
+]
 
-type LoadState =
-    | {
-          state: 'loading'
-      }
-    | {
-          state: 'loaded'
-          link: string
-      }
+const content = `# 꼭 너만을 위한 AI 뉴스레터,\nBaking News
 
-const loginLinks: Record<string, LoadState> = {}
+[https://baking-news.vercel.app](https://baking-news.vercel.app)
 
-function loginWithProvider(providerKey: string) {
-    if (!(providerKey in loginLinks)) {
-        loginLinks[providerKey] = { state: 'loading' }
+Baking News는 문해력과 관심사를 반영해 맞춤 뉴스레터를 제공합니다.     
+`
 
-        pb.collection('users')
-            .authWithOAuth2({
-                provider: providerKey,
-                urlCallback(url) {
-                    loginLinks[providerKey] = { state: 'loaded', link: url }
-                },
-            })
-            .then(() => {
-                location.href = '/'
-            })
-    } else {
-        const provider = loginLinks[providerKey]
-
-        if (provider.state === 'loaded') {
-            window.open(provider.link, '_blank', 'popup, width=500, height=600')
-            return
-        }
+;(async () => {
+    for (const char of content) {
+        await new Promise((resolve) => setTimeout(resolve, 3))
+        renderer.render(char)
     }
-
-    setTimeout(() => loginWithProvider(providerKey), 50)
-}
+})()

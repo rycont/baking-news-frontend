@@ -11,11 +11,13 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "@vanilla-extract/vite-plugin": "^4.0.9",
     "glob": "^10.3.10",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
   },
   "dependencies": {
+    "@vanilla-extract/css": "^1.15.1",
     "pocketbase": "^0.21.1",
     "rss-parser": "^3.13.0",
     "vite-plugin-open-graph": "^2.0.4"

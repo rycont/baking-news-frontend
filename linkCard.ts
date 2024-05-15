@@ -1,19 +1,21 @@
 import { Article } from './article'
-
-const linkCardTemplate = document.getElementById(
-    'link_card'
-) as HTMLTemplateElement
+import CARD from './shade-ui/dist/card'
+import { SUBTITLE, SMALL_TEXT } from './shade-ui/dist/typo'
 
 export function buildLinkCard(article: Article) {
-    const linkCard = linkCardTemplate.content.cloneNode(true) as HTMLElement
+    const card = document.createElement(CARD)
+    const title = document.createElement(SUBTITLE)
+    const link = document.createElement(SMALL_TEXT)
 
-    const title = linkCard.querySelector('.title') as HTMLElement
-    const link = linkCard.querySelector('.link') as HTMLElement
-    const anchor = linkCard.querySelector('a') as HTMLAnchorElement
+    card.setAttribute('g', '3')
 
     title.appendChild(document.createTextNode(article.title))
     link.appendChild(document.createTextNode(article.link))
-    anchor.href = article.link
 
-    return linkCard
+    link.setAttribute('l6', '')
+
+    card.appendChild(title)
+    card.appendChild(link)
+
+    return card
 }
