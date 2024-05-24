@@ -1,6 +1,11 @@
 import { Article } from '../article'
 
 export function dismissUsedArticles(articles: Article[]) {
+    if (import.meta.env.VITE_IGNORE_DISMISSED_ARTICLES) {
+        console.log('Ignoring dismissed articles')
+        return articles
+    }
+
     const usedArticles = JSON.parse(
         localStorage.getItem('usedArticles') || '[]'
     )

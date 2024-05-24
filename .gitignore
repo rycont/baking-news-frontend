@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 id_rsa
-.env
+.env.local

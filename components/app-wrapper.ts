@@ -15,6 +15,11 @@ export class AppWrapper extends ShadeContainerNarrow {
         this.style.setProperty('background-image', `url(${flatBreadSVG})`)
         this.style.setProperty('background-repeat', 'no-repeat')
         this.style.setProperty('background-position', 'center')
+
+        this.style.setProperty(
+            '--container-background-color',
+            'var(--sh-color-l2)'
+        )
     }
 }
 

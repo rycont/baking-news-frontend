@@ -4,67 +4,25 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Baking News</title>
-        <link rel="stylesheet" href="./style.css" />
+        <link rel="stylesheet" href="/shade-ui/dist/style.css" />
+        <link rel="stylesheet" href="/shade-ui/suit.css" />
+        <script type="module" src="./components/app-wrapper.ts"></script>
+        <script type="module" src="/shade-ui/dist/hovert.js"></script>
+        <script type="module" src="/shade-ui/dist/typo.js"></script>
+        <script type="module" src="/shade-ui/elements/card/index.ts"></script>
+        <script type="module" src="/shade-ui/dist/chip.js"></script>
+        <script type="module" src="/shade-ui/elements/button/index.ts"></script>
+        <script
+            type="module"
+            src="./components/gradual-renderer/index.ts"
+        ></script>
     </head>
 
     <body>
-        <header>
-            <h2 class="title logo">Baking News</h2>
-            <a href="/config/index.html"
-                ><img src="/icon/cog.svg" alt="설정"
-            /></a>
-        </header>
-        <div class="content">
-            <section class="card" id="news_letter">
-                <p id="interests"></p>
-                <div class="chip">
-                    <p class="bold" id="date"></p>
-                </div>
-                <article id="article_content">
-                    <div id="loading">
-                        <img
-                            src="/image/bread.svg"
-                            alt="빵 이미지"
-                            id="bread"
-                        />
-                        <p>신선한 뉴스레터를 굽는중입니다</p>
-                    </div>
-                </article>
-                <section id="footer">
-                    <hr />
-                    <p>오늘의 뉴스레터는 어땠나요?</p>
-                    <fieldset id="feedback">
-                        <legend>
-                            <p class="bold" id="label">난이도</p>
-                        </legend>
-
-                        <label>
-                            <input type="radio" name="difficulty" id="easy" />
-                            <p>쉬웠어요</p>
-                        </label>
-                        <label>
-                            <input type="radio" name="difficulty" id="proper" />
-                            <p>좋았어요</p>
-                        </label>
-                        <label>
-                            <input type="radio" name="difficulty" id="hard" />
-                            <p>어려웠어요</p>
-                        </label>
-                        <p id="response_message"></p>
-                    </fieldset>
-                </section>
-            </section>
-            <section class="card" id="all_articles">
-                <h2>오늘의 모든 아티클</h2>
-            </section>
-        </div>
+        <app-wrapper>
+            <sh-vert id="app" gap="6"> </sh-vert>
+        </app-wrapper>
     </body>
 
-    <template id="link_card">
-        <a href="" class="link_card" target="_blank">
-            <p class="title bold"></p>
-            <p class="link"></p> </a
-    ></template>
-
-    <script type="module" src="./script.ts"></script>
+    <script type="module" src="./render.tsx"></script>
 </html>

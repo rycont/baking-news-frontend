@@ -1,7 +1,11 @@
-import { Article } from './article'
-import { buildLinkCard } from './linkCard'
-import INLINE_LINK, { ShadeInlineLink } from './shade-ui/elements/inline-link'
-import { TEXT_CONTENT, TITLE } from './shade-ui/dist/typo'
+import { Article } from '../../article'
+import { buildLinkCard } from '../../linkCard'
+import INLINE_LINK, {
+    ShadeInlineLink,
+} from '../../shade-ui/elements/inline-link'
+import { TEXT_CONTENT, TITLE } from '../../shade-ui/dist/typo'
+import { DefineOnce } from '../../shade-ui/util'
+import { rendererStyle, tokenAnimation } from './style.css'
 
 export class GradualRenderer {
     renderQueue: string[] = []
@@ -50,7 +54,7 @@ export class GradualRenderer {
 
             if (actions.length === 0) {
                 const span = document.createElement('span')
-                span.classList.add('appear')
+                span.classList.add(tokenAnimation)
                 span.appendChild(document.createTextNode(content))
 
                 if (!this.currentElement) {
@@ -219,3 +223,42 @@ function showArticleCard(
         currentElement.nextSibling
     )
 }
+
+export class GradualRendererComponent extends HTMLElement {
+    wrapper = document.createElement('div')
+    renderer: GradualRenderer = new GradualRenderer(this.wrapper)
+
+    static observedAttributes = ['content', 'referring-article']
+
+    constructor() {
+        super()
+        this.wrapper.classList.add(rendererStyle)
+    }
+
+    connectedCallback() {
+        this.appendChild(this.wrapper)
+    }
+
+    attributeChangedCallback(
+        name: string,
+        oldValue: string | null,
+        newValue: string | null
+    ) {
+        if (name === 'content' && newValue) {
+            if (!oldValue) {
+                this.renderer.render(newValue)
+                return
+            }
+
+            const newParts = newValue.slice(oldValue.length)
+            this.renderer.render(newParts)
+        }
+
+        if (name === 'referring-article' && newValue) {
+            console.log(newValue)
+            this.renderer.referringArticles = JSON.parse(newValue)
+        }
+    }
+}
+
+DefineOnce.define('gradual-renderer', GradualRendererComponent)

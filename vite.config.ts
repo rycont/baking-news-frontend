@@ -1,5 +1,7 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
 import ogPlugin from 'vite-plugin-open-graph'
+import solidSvg from 'vite-plugin-solid-svg'
+import solidPlugin from 'vite-plugin-solid'
 import { defineConfig } from 'vite'
 import { glob } from 'glob'
 
@@ -39,5 +41,7 @@ export default defineConfig({
                 siteName: 'Baking News',
             },
         }),
+        solidPlugin(),
+        solidSvg(),
     ],
 })

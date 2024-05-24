@@ -14,12 +14,16 @@
     "@vanilla-extract/vite-plugin": "^4.0.9",
     "glob": "^10.3.10",
     "typescript": "^5.2.2",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "vite-plugin-solid": "^2.10.2",
+    "vite-plugin-solid-svg": "^0.8.1"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.15.1",
     "pocketbase": "^0.21.1",
     "rss-parser": "^3.13.0",
+    "solid-element": "^1.8.0",
+    "solid-js": "^1.8.17",
     "vite-plugin-open-graph": "^2.0.4"
   }
 }
