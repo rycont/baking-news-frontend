@@ -1,17 +1,23 @@
+import { For, Match, Show, Switch, createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
-import { For, Match, Switch, createSignal } from 'solid-js'
-import { pb } from '../db'
-import { getMe } from '../utils/getMe'
-import { assert } from '../utils/assert'
-import Spinner from '../shade-ui/icons/animated/spinner.svg?component-solid'
-import editIcon from '../shade-ui/icons/Pen.svg?url'
-import { logTextStyle } from './style.css.ts'
+
+import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
+import editIcon from '@shade/icons/Pen.svg?url'
+
+import { popAppearStyle } from '@shade/theme.css.ts'
+
+import { createNewsletterFromArticles } from '@utils/api.ts'
+import { assert } from '@utils/assert'
+import { getMe } from '@utils/getMe'
+
+import { ContentProvidersResponse } from '@/pocketbase-types.ts'
+import { NEWSLETTER_STORAGE_PREFIX } from '@/constants.ts'
+import { Article } from '@/article.ts'
+import { pb } from '@/db'
+
 import { getFreshArticles } from '../scripts/getFreshArticles.ts'
-import { popAppearStyle } from '../shade-ui/theme.css.ts'
-import { Article } from '../article.ts'
-import { ContentProvidersResponse } from '../pocketbase-types.ts'
-import { NEWSLETTER_STORAGE_PREFIX } from '../constants.ts'
-import { createNewsletterFromArticles } from '../utils/api.ts'
+import { logTextStyle } from './style.css.ts'
+import { FeedbackPanel } from './widgets/feedback.tsx'
 
 const isLoggedIn = pb.authStore.isValid
 
@@ -37,6 +43,7 @@ if (!usingProviders || usingProviders.length === 0) {
 const [generationLog, setGenerationLog] = createSignal<string[]>([])
 const [newsletterContent, setNewsletterContent] = createSignal<string>('')
 const [referringArticles, setReferringArticles] = createSignal<Article[]>([])
+const [isFeedbackPanelVisible, setFeedbackPanelVisiblity] = createSignal(false)
 
 const App = () => {
     return (
@@ -78,6 +85,9 @@ const App = () => {
                             referringArticles()
                         )}
                     />
+                    <Show when={isFeedbackPanelVisible()}>
+                        <FeedbackPanel />
+                    </Show>
                 </Match>
             </Switch>
         </>
@@ -106,6 +116,8 @@ const newsletterResult = await createNewsletterFromArticles(articles, {
         setGenerationLog((prev) => [...prev, '뉴스레터를 작성하고 있어요'])
     },
 })
+
+setFeedbackPanelVisiblity(true)
 
 const now = +new Date()
 localStorage.setItem(

@@ -5,6 +5,8 @@ import { wrapperStyle } from './style.css'
 
 export class AppWrapper extends ShadeContainerNarrow {
     static observedAttributes = ['appbar']
+    static paddingInset = 6
+
     private _appBar: AppBar | null = null
 
     constructor() {
@@ -16,20 +18,25 @@ export class AppWrapper extends ShadeContainerNarrow {
         this.classList.add(wrapperStyle)
     }
 
-    attributeChangedCallback(name: string, newValue: string | null) {
+    attributeChangedCallback(
+        name: string,
+        _oldValue: string | null,
+        newValue: string | null
+    ) {
         if (name === 'appbar') {
             const showAppBar = newValue !== null
+            console.log(name, newValue)
 
             if (showAppBar) {
                 this.style.setProperty(
-                    'paddingBottom',
-                    'calc(env(safe-area-inset-bottom) + 19rem)'
+                    'padding-bottom',
+                    19 + AppWrapper.paddingInset + 'rem'
                 )
                 this.appBar.show()
             } else {
                 this.style.setProperty(
-                    'paddingBottom',
-                    'env(safe-area-inset-bottom)'
+                    'padding-bottom',
+                    AppWrapper.paddingInset + 'rem'
                 )
                 this.appBar.hide()
             }

@@ -44,4 +44,13 @@ export default defineConfig({
         solidPlugin(),
         solidSvg(),
     ],
+    resolve: {
+        alias: {
+            '@shade': '/shade-ui',
+            '@components': '/components',
+            '@assets': '/assets',
+            '@utils': '/utils',
+            '@': __dirname,
+        },
+    },
 })

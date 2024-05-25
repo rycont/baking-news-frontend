@@ -1,4 +1,4 @@
-import flatBreadSVG from '../../assets/flat-bread-label.svg?url'
+import flatBreadSVG from '@assets/flat-bread-label.svg?url'
 import { globalStyle, style } from '@vanilla-extract/css'
 
 export const wrapperStyle = style({
@@ -6,8 +6,10 @@ export const wrapperStyle = style({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
     backgroundAttachment: 'fixed',
-    height: '100vh',
+    height: 'calc(100vh - env(safe-area-inset-bottom))',
+    paddingTop: 'calc(env(safe-area-inset-top) + 12rem)',
     position: 'relative',
+    overflowY: 'scroll',
 })
 
 globalStyle(':root', {
