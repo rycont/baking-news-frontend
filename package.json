@@ -25,5 +25,6 @@
     "solid-element": "^1.8.0",
     "solid-js": "^1.8.17",
     "vite-plugin-open-graph": "^2.0.4"
-  }
+  },
+  "packageManager": "pnpm@9.1.2+sha1.907f57a52517de34399d66401bf220a549e47b57"
 }

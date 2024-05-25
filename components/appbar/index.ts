@@ -27,14 +27,22 @@ const ITEMS: AppbarItem[] = [
 
 export class AppBar extends HTMLElement {
     private static items: AppbarItem[] = ITEMS
+    private currentItem: AppbarItem | undefined
 
     constructor() {
         super()
+
+        const currentPath = window.location.pathname
+        const currentItem = AppBar.items.find((item) =>
+            currentPath.startsWith(item.link)
+        )
+
+        this.currentItem = currentItem
     }
 
     connectedCallback() {
         this.classList.add(appbarStyle)
-        this.buildItems(ITEMS)
+        this.buildItems(AppBar.items)
     }
 
     buildItems(items: AppbarItem[]) {
@@ -45,8 +53,9 @@ export class AppBar extends HTMLElement {
     }
 
     buildItem(item: AppbarItem) {
-        const itemElement = document.createElement('div')
+        const itemElement = document.createElement('a')
         itemElement.classList.add(itemStyle)
+        itemElement.href = item.link
 
         const iconWrapper = document.createElement('span')
         iconWrapper.classList.add(itemIconWrapperStyle)
@@ -56,6 +65,10 @@ export class AppBar extends HTMLElement {
         const textElement = document.createElement(TOKEN)
         textElement.appendChild(document.createTextNode(item.label))
         itemElement.appendChild(textElement)
+
+        if (this.currentItem?.link === item.link) {
+            itemElement.setAttribute('aria-current', 'page')
+        }
 
         return itemElement
     }

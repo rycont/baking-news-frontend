@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { vars } from '../../shade-ui/theme.css'
+import { THEME_COLOR, vars } from '../../shade-ui/theme.css'
 import { NARROW_CONTAINER_WIDTH } from '../../shade-ui/elements/container-narrow/style.css'
 
 export const appbarStyle = style({
@@ -21,6 +21,13 @@ export const itemStyle = style({
     alignItems: 'center',
     gap: '1rem',
     color: vars.color.L5,
+    textDecoration: 'none',
+    '&[aria-current="page"]': {
+        color: THEME_COLOR,
+        backgroundColor: vars.color.L1,
+        border: `1px solid ${vars.color.L4}`,
+        borderRadius: '3rem',
+    },
 })
 
 export const itemIconWrapperStyle = style({

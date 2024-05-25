@@ -1,5 +1,5 @@
 import flatBreadSVG from '../../assets/flat-bread-label.svg?url'
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 
 export const wrapperStyle = style({
     backgroundImage: `url(${flatBreadSVG})`,
@@ -8,6 +8,9 @@ export const wrapperStyle = style({
     backgroundAttachment: 'fixed',
     height: '100vh',
     position: 'relative',
+})
+
+globalStyle(':root', {
     vars: {
         '--sh-container-background-color': 'var(--sh-color-l2)',
     },
