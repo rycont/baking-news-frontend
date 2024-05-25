@@ -169,8 +169,6 @@ export class GradualRenderer {
                     .split('](')
                     .map((x) => x.trim())
 
-                console.log(href, text)
-
                 this.currentElement.setAttribute('href', href)
                 this.currentElement.setAttribute('text', text)
 
@@ -199,7 +197,6 @@ function showArticleCard(
     element: HTMLElement,
     article: Article
 ) {
-    console.log('예?')
     let currentElement: HTMLElement = element
 
     while (true) {
@@ -255,7 +252,6 @@ export class GradualRendererComponent extends HTMLElement {
         }
 
         if (name === 'referring-article' && newValue) {
-            console.log(newValue)
             this.renderer.referringArticles = JSON.parse(newValue)
         }
     }

@@ -29,5 +29,3 @@ Baking News는 문해력과 관심사를 반영해 맞춤 뉴스레터를 제공
         renderer.render(char)
     }
 })()
-
-console.log(import.meta.env)
