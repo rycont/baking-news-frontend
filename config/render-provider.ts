@@ -1,102 +1,50 @@
-import { pb } from '../db'
-import { assert } from '../utils/assert'
+import { getElements } from '@utils/getElements'
 import { getMe } from '../utils/getMe'
-import { hideLoading, showLoading } from './showLoading'
+import { Result } from '@/types/result'
+import { ContentProvidersResponse } from '@/pocketbase-types'
+import { providerListItemStyle } from './style.css'
+import { smallText } from '@shade/elements/typo/style.css'
 
-const elements = getElements()
+const elements = getElements({
+    providers: HTMLDivElement,
+})
 
-const usingProviders = await getUsingProviders()
-const allProviders = await getProviders()
+const usingProvidersResult = await getUsingProviders()
 
-await render()
-
-async function render() {
-    for (const provider of allProviders) {
-        const name = provider.name
-        const id = provider.id
-        const isUsing = usingProviders.has(provider.id)
-
-        const instance = createItemElement(name, id, isUsing)
-
-        elements.grid.appendChild(instance)
-    }
+if (!usingProvidersResult.success) {
+    location.href = '/login/index.html'
+    throw ''
 }
 
-async function getUsingProviders() {
+for (const provider of usingProvidersResult.value) {
+    addProviderCard(provider)
+}
+
+async function getUsingProviders(): Promise<
+    Result<ContentProvidersResponse[], 'not-logged-in'>
+> {
     const me = await getMe()
-    const usingProviders = me.using_providers
+    const usingProviders = me.expand?.using_providers
 
-    return new Set(usingProviders)
-}
-
-async function onCheckboxClicked(event: Event, id: string) {
-    if (!(event.target instanceof HTMLInputElement)) {
-        return
+    if (!usingProviders) {
+        return {
+            success: false,
+            error: 'not-logged-in',
+        }
     }
 
-    const checked = event.target.checked
-
-    if (checked) {
-        usingProviders.add(id)
-    } else {
-        usingProviders.delete(id)
+    return {
+        success: true,
+        value: usingProviders,
     }
-
-    showLoading()
-    await updateUsingProviders()
-    hideLoading()
 }
 
-async function updateUsingProviders() {
-    assert(pb.authStore.model)
-    const myId = pb.authStore.model.id
+function addProviderCard(provider: ContentProvidersResponse) {
+    const providerCard = document.createElement('div')
+    providerCard.classList.add(providerListItemStyle, smallText)
 
-    const result = await pb.collection('users').update(myId, {
-        using_providers: Array.from(usingProviders),
-    })
+    const providerName = document.createTextNode(provider.name)
+    providerCard.appendChild(providerName)
 
-    result.using_providers
-}
-
-function getElements() {
-    const template = document.getElementById(
-        'provider_item'
-    ) as HTMLTemplateElement
-    const grid = document.getElementById('provider_grid') as HTMLDivElement
-
-    return { template, grid }
-}
-
-async function getProviders() {
-    const allProviders = await pb.collection('content_providers').getFullList({
-        sort: '-name',
-    })
-
-    return allProviders
-}
-
-function createItemElement(
-    providerName: string,
-    providerId: string,
-    isUsing: boolean
-) {
-    const instance = elements.template.content.cloneNode(
-        true
-    ) as DocumentFragment
-
-    const nameElement = instance.querySelector('.name') as HTMLSpanElement
-    nameElement.appendChild(document.createTextNode(providerName))
-
-    const input = instance.querySelector('input') as HTMLInputElement
-    input.name = `provider_${providerId}`
-
-    if (isUsing) {
-        input.checked = true
-    }
-
-    input.addEventListener('change', (event) =>
-        onCheckboxClicked(event, providerId)
-    )
-
-    return instance
+    elements.providers.appendChild(providerCard)
 }
