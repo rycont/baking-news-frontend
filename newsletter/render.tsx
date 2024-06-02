@@ -16,7 +16,6 @@ import { Article } from '@/article.ts'
 import { pb } from '@/db'
 
 import { getFreshArticles } from '../scripts/getFreshArticles.ts'
-import { logTextStyle } from './style.css.ts'
 import { FeedbackPanel } from './widgets/feedback.tsx'
 
 const isLoggedIn = pb.authStore.isValid
@@ -66,7 +65,7 @@ const App = () => {
                         <sh-button attr:type="ghost" attr:icon={editIcon}>
                             수정
                         </sh-button>
-                        <sh-vert gap={2} class={logTextStyle}>
+                        <sh-vert gap={2}>
                             <For each={generationLog()}>
                                 {(logline) => (
                                     <sh-text L6 class={popAppearStyle}>
