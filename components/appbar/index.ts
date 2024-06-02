@@ -1,10 +1,10 @@
-import { DefineOnce } from '../../shade-ui/util'
+import flatBreadSVG from '@assets/flat-bread.svg?raw'
+
+import cog from '@shade/icons/Setting.svg?raw'
+import { DefineOnce } from '@shade/util'
+import { TOKEN } from '@shade/dist/elements/typo'
+
 import { appbarStyle, itemIconWrapperStyle, itemStyle } from './style.css'
-
-import flatBreadSVG from '../../assets/flat-bread.svg?raw'
-import cog from '../../shade-ui/icons/Setting.svg?raw'
-
-import { TOKEN } from '../../shade-ui/dist/typo'
 
 interface AppbarItem {
     icon: string
@@ -16,12 +16,12 @@ const ITEMS: AppbarItem[] = [
     {
         icon: flatBreadSVG,
         label: '뉴스레터',
-        link: '/newsletter',
+        link: '/newsletter/index.html',
     },
     {
         icon: cog,
         label: '설정',
-        link: '/setting',
+        link: '/config/index.html',
     },
 ]
 
@@ -74,6 +74,10 @@ export class AppBar extends HTMLElement {
     }
 
     show() {
+        // TODO: Implement
+    }
+
+    hide() {
         // TODO: Implement
     }
 }

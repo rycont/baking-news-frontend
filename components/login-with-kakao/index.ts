@@ -1,16 +1,14 @@
 import { pb } from '../../db'
-import { ShadeFloatingButton } from '../../shade-ui/elements/floating-button'
-import { DefineOnce } from '../../shade-ui/util'
+import { ShadeFloatingButton } from '@shade/dist/elements/floating-button'
+import { DefineOnce } from '@shade/util'
 import kakaoIcon from './kakao.svg?url'
 
-let loginLink: string
 let onLoginLinkGenerated: (link: string) => void
 
 pb.collection('users')
     .authWithOAuth2({
         provider: 'kakao',
         urlCallback(url) {
-            loginLink = url
             onLoginLinkGenerated?.(url)
         },
     })

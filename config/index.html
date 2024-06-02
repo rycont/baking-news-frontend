@@ -4,80 +4,29 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Baking News</title>
-        <link rel="stylesheet" href="./style.css" />
+        <link rel="stylesheet" href="../shade-ui/dist/style.css" />
+        <link rel="stylesheet" href="../shade-ui/suit.css" />
+        <script type="module">
+            import '@components/app-wrapper'
+            import '@shade/dist/elements/typo/index.js'
+            import '@shade/dist/elements/card/index.js'
+            import '@shade/dist/elements/button/index.js'
+            import '@shade/dist/elements/hovert/index.js'
+        </script>
     </head>
     <body>
-        <div id="loading" class="toast">
-            <p>✅ 저장됐습니다</p>
-        </div>
-        <a href="/" class="plain"><h1>← 설정</h1></a>
-        <section>
-            <h2>사용할 피드</h2>
-            <button class="secondary" id="add_feed">
-                <h3>피드 추가</h3>
-            </button>
-            <div id="provider_grid"></div>
-        </section>
-        <section>
-            <h2>관심사</h2>
-            <button class="secondary" id="add_interest">
-                <h3>관심사 추가</h3>
-            </button>
-            <div id="no_interests">
-                <blockquote>
-                    <p>관심사를 추가해야 뉴스레터를 볼 수 있어요</p>
-                </blockquote>
-            </div>
-            <div id="interests_list"></div>
-        </section>
-        <section>
-            <h2>배경</h2>
-            <blockquote>
-                <p>
-                    살아온 배경, 혹은 관심 분야에 대해 소개해주면 적절한 글을 더
-                    잘 고를 수 있어요
-                </p>
-            </blockquote>
-            <textarea
-                id="background"
-                rows="10"
-                placeholder="대한민국 해군에서 수병으로 근무하고 있습니다. 한국대학교에서 기계공학을 전공하고 있습니다. 주식 투자를 취미로 하고 있으며, 해외 증시에 관심이 많습니다. 한국어 화자이며 영어와 일본어를 조금 할 수 있습니다."
-            ></textarea>
-        </section>
+        <app-wrapper appbar>
+            <sh-title> 설정 </sh-title>
+            <sh-vert gap="3">
+                <sh-card>
+                    <sh-subtitle> 사용할 출처 </sh-subtitle>
+                    <sh-button type="ghost"> 수정 </sh-button>
+                </sh-card>
+                <sh-card>
+                    <sh-subtitle> 내 관심사 </sh-subtitle>
+                    <sh-button type="ghost"> 관심사 추가 </sh-button>
+                </sh-card>
+            </sh-vert>
+        </app-wrapper>
     </body>
-    <script type="module" src="./script.ts"></script>
-
-    <dialog id="add_feed_modal">
-        <h2>새 피드 추가</h2>
-        <blockquote>
-            <p>RSS, Atom으로 컨텐츠를 공급하는 피드를 구독할 수 있습니다.</p>
-        </blockquote>
-
-        <div id="loading_cover">
-            <img src="/image/bread.svg" alt="빵 이미지" id="bread" />
-            <p>(등록에는 1분 가량이 소요됩니다. 인터넷 창을 열어두세요.)</p>
-            <p>열심히 피드를 등록하고 있습니다</p>
-        </div>
-
-        <form id="add_feed_form">
-            <input type="text" placeholder="RSS 링크" required name="url" />
-            <input type="text" placeholder="이름" required name="name" />
-            <button id="add_feed" type="submit">
-                <h3>등록하기</h3>
-            </button>
-        </form>
-    </dialog>
-
-    <template id="provider_item">
-        <label>
-            <input type="checkbox" />
-            <p class="name"></p>
-        </label>
-    </template>
-    <template id="interests_item">
-        <div class="interests_item">
-            <input type="text" placeholder="교육" />
-            <img src="/icon/remove.svg" alt="" />
-        </div>
-    </template>
 </html>

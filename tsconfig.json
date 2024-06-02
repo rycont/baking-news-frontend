@@ -34,5 +34,6 @@
             "@/*": ["./*"]
         }
     },
-    "include": ["."]
+    "include": ["."],
+    "exclude": ["shade-ui"]
 }

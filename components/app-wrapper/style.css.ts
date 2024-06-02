@@ -9,7 +9,7 @@ export const wrapperStyle = style({
     height: 'calc(100vh - env(safe-area-inset-bottom))',
     paddingTop: 'calc(env(safe-area-inset-top) + 12rem)',
     position: 'relative',
-    overflowY: 'scroll',
+    overflowY: 'auto',
 })
 
 globalStyle(':root', {

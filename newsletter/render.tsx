@@ -66,7 +66,7 @@ const App = () => {
                         <sh-button attr:type="ghost" attr:icon={editIcon}>
                             수정
                         </sh-button>
-                        <sh-vert gap={2} className={logTextStyle}>
+                        <sh-vert gap={2} class={logTextStyle}>
                             <For each={generationLog()}>
                                 {(logline) => (
                                     <sh-text L6 class={popAppearStyle}>

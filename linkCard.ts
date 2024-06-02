@@ -1,6 +1,6 @@
 import { Article } from './article'
-import CARD from './shade-ui/dist/card'
-import { SUBTITLE, SMALL_TEXT } from './shade-ui/dist/typo'
+import CARD from '@shade/dist/elements/card'
+import { SUBTITLE, SMALL_TEXT } from '@shade/dist/elements/typo'
 
 export function buildLinkCard(article: Article) {
     const card = document.createElement(CARD)

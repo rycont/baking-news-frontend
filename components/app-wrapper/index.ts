@@ -1,5 +1,5 @@
-import { ShadeContainerNarrow } from '../../shade-ui/elements/container-narrow'
-import { DefineOnce } from '../../shade-ui/util'
+import { ShadeContainerNarrow } from '@shade/dist/elements/container-narrow'
+import { DefineOnce } from '@shade/util'
 import { APP_BAR, AppBar } from '../appbar'
 import { wrapperStyle } from './style.css'
 

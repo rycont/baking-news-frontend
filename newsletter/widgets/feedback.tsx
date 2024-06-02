@@ -1,3 +1,11 @@
+import '@shade/dist/elements/hovert'
+import '@shade/dist/elements/card'
+import '@shade/dist/elements/chip'
+import '@shade/dist/elements/button'
+import '@shade/dist/elements/typo'
+
+import '@components/gradual-renderer'
+
 import { READING_LEVEL_ORDER } from '@/constants'
 import { pb } from '@/db'
 import { Collections, UsersReadingLevelOptions } from '@/pocketbase-types'

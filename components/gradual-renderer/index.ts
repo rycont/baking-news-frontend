@@ -1,10 +1,8 @@
 import { Article } from '../../article'
 import { buildLinkCard } from '../../linkCard'
-import INLINE_LINK, {
-    ShadeInlineLink,
-} from '../../shade-ui/elements/inline-link'
-import { TEXT_CONTENT, TITLE } from '../../shade-ui/dist/typo'
-import { DefineOnce } from '../../shade-ui/util'
+import INLINE_LINK, { ShadeInlineLink } from '@shade/dist/elements/inline-link'
+import { TEXT_CONTENT, TITLE } from '@shade/dist/elements/typo'
+import { DefineOnce } from '@shade/util'
 import { rendererStyle, tokenAnimation } from './style.css'
 
 export class GradualRenderer {
@@ -257,4 +255,18 @@ export class GradualRendererComponent extends HTMLElement {
     }
 }
 
-DefineOnce.define('gradual-renderer', GradualRendererComponent)
+const NAME = 'gradual-renderer'
+export default NAME
+
+DefineOnce.define(NAME, GradualRendererComponent)
+
+export interface GradualRendererProps {
+    content?: string
+    'referring-articles'?: string
+}
+
+declare global {
+    interface HTMLElementTagNameMap {
+        'gradual-renderer': GradualRendererComponent
+    }
+}
