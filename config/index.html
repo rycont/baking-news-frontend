@@ -6,22 +6,40 @@
         <title>Baking News</title>
         <link rel="stylesheet" href="../shade-ui/dist/style.css" />
         <link rel="stylesheet" href="../shade-ui/suit.css" />
-        <script type="module">
-            import '@components/app-wrapper'
-            import '@shade/dist/elements/typo/index.js'
-            import '@shade/dist/elements/card/index.js'
-            import '@shade/dist/elements/button/index.js'
-            import '@shade/dist/elements/hovert/index.js'
-        </script>
+        <script type="module" src="/components/app-wrapper/index.ts"></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/typo/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/card/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/button/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/hovert/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/title-bar/index.js"
+        ></script>
     </head>
     <body>
         <app-wrapper appbar>
-            <sh-title> 설정 </sh-title>
+            <sh-title-bar title="설정"> </sh-title-bar>
             <sh-vert gap="3">
                 <sh-card>
                     <sh-subtitle> 사용할 출처 </sh-subtitle>
                     <div id="providers"></div>
-                    <sh-button type="ghost"> 수정 </sh-button>
+                    <a href="provider/index.html">
+                        <sh-button type="ghost" icon="/shade-ui/icons/Pen.svg">
+                            수정
+                        </sh-button></a
+                    >
                 </sh-card>
                 <sh-card>
                     <sh-subtitle> 내 관심사 </sh-subtitle>

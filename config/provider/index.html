@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>사용할 출처 : Baking News</title>
+        <link rel="stylesheet" href="/shade-ui/dist/style.css" />
+        <link rel="stylesheet" href="/shade-ui/suit.css" />
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/typo/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/container-narrow/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/title-bar/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/button/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/input/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/dist/elements/hovert/index.js"
+        ></script>
+    </head>
+    <body>
+        <sh-container-narrow>
+            <sh-title-bar title="사용할 출처" back>
+                <sh-button icon="/shade-ui/icons/AddFile.svg" type="ghost">
+                    RSS 추가하기
+                </sh-button>
+            </sh-title-bar>
+            <sh-input placeholder="검색 ..." type="search"></sh-input>
+            <sh-vert id="provider-list"> </sh-vert>
+        </sh-container-narrow>
+    </body>
+    <script type="module" src="./render.tsx"></script>
+</html>

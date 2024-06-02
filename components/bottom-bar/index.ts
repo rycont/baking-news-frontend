@@ -25,7 +25,7 @@ const ITEMS: AppbarItem[] = [
     },
 ]
 
-export class AppBar extends HTMLElement {
+export class BottomBar extends HTMLElement {
     private static items: AppbarItem[] = ITEMS
     private currentItem: AppbarItem | undefined
 
@@ -33,7 +33,7 @@ export class AppBar extends HTMLElement {
         super()
 
         const currentPath = window.location.pathname
-        const currentItem = AppBar.items.find((item) =>
+        const currentItem = BottomBar.items.find((item) =>
             currentPath.startsWith(item.link)
         )
 
@@ -42,7 +42,7 @@ export class AppBar extends HTMLElement {
 
     connectedCallback() {
         this.classList.add(appbarStyle)
-        this.buildItems(AppBar.items)
+        this.buildItems(BottomBar.items)
     }
 
     buildItems(items: AppbarItem[]) {
@@ -82,5 +82,5 @@ export class AppBar extends HTMLElement {
     }
 }
 
-export const APP_BAR = 'app-bar'
-DefineOnce.define(APP_BAR, AppBar)
+export const BOTTOM_BAR = 'bottom-bar'
+DefineOnce.define(BOTTOM_BAR, BottomBar)

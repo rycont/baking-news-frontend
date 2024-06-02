@@ -1,13 +1,13 @@
 import { ShadeContainerNarrow } from '@shade/dist/elements/container-narrow'
 import { DefineOnce } from '@shade/util'
-import { APP_BAR, AppBar } from '../appbar'
+import { BOTTOM_BAR, BottomBar } from '../bottom-bar'
 import { wrapperStyle } from './style.css'
 
 export class AppWrapper extends ShadeContainerNarrow {
     static observedAttributes = ['appbar']
     static paddingInset = 6
 
-    private _appBar: AppBar | null = null
+    private _appBar: BottomBar | null = null
 
     constructor() {
         super()
@@ -45,10 +45,10 @@ export class AppWrapper extends ShadeContainerNarrow {
 
     get appBar() {
         if (!this._appBar) {
-            const appbarInstance = document.createElement(APP_BAR)
+            const appbarInstance = document.createElement(BOTTOM_BAR)
             console.log(appbarInstance)
 
-            if (!(appbarInstance instanceof AppBar)) {
+            if (!(appbarInstance instanceof BottomBar)) {
                 throw new Error('Cannot build appbar instance')
             }
 

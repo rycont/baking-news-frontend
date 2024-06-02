@@ -7,13 +7,15 @@ export type SolidProps<T, E extends HTMLElement = HTMLElement> = Omit<
     key?: string
     children?: any
 } & T & {
-        [key in keyof T as `attr:${string & key}`]: T[key]
+        [key in keyof T as `attr:${string & key}`]: T[key] | null
     }
 
 import { ShadeHovertProps, horz, vert } from '@shade/dist/elements/hovert'
 import Card, { ShadeCardProps } from '@shade/dist/elements/card'
 import Chip, { ShadeChipProps } from '@shade/dist/elements/chip'
 import Button, { ShadeButtonProps } from '@shade/dist/elements/button'
+import Divider, { ShadeDividerProps } from '@shade/dist/elements/divider'
+import Checkbox, { ShadeCheckboxProps } from '@shade/dist/elements/checkbox'
 import { ShadeTypoProps } from '@shade/dist/elements/typo'
 import GradualRenderer, {
     GradualRendererProps,
@@ -31,6 +33,8 @@ declare module 'solid-js' {
             [horz]: SolidProps<ShadeHovertProps>
             [Chip]: SolidProps<ShadeChipProps>
             [GradualRenderer]: SolidProps<GradualRendererProps>
+            [Checkbox]: SolidProps<ShadeCheckboxProps, HTMLInputElement>
+            [Divider]: SolidProps<ShadeDividerProps>
         }
     }
 }
