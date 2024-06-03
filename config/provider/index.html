@@ -12,7 +12,7 @@
         ></script>
         <script
             type="module"
-            src="/shade-ui/dist/elements/container-narrow/index.js"
+            src="/shade-ui/elements/container-narrow/index.ts"
         ></script>
         <script
             type="module"
@@ -20,43 +20,26 @@
         ></script>
         <script type="module" src="/shade-ui/elements/button/index.ts"></script>
         <script type="module" src="/shade-ui/elements/input/index.ts"></script>
-        <script
-            type="module"
-            src="/shade-ui/dist/elements/hovert/index.js"
-        ></script>
+        <script type="module" src="/shade-ui/elements/hovert/index.ts"></script>
         <script
             type="module"
             src="/shade-ui/elements/inline-link/index.ts"
         ></script>
+        <script type="module" src="./render.tsx"></script>
     </head>
     <body>
-        <sh-container-narrow>
-            <sh-title-bar title="사용할 출처" back>
-                <a href="/config/provider/add-rss/index.html"
-                    ><sh-button type="ghost">
-                        <img
-                            src="/shade-ui/icons/ListAdd.svg"
-                            alt="추가 아이콘"
-                        />
-                        RSS 추가하기
-                    </sh-button></a
-                >
+        <sh-container-narrow fit-vh>
+            <sh-title-bar title="어떤 출처에서 기사를 가져올까요?">
             </sh-title-bar>
-            <sh-input placeholder="검색 ..." type="search"></sh-input>
-            <sh-vert id="provider-list"> </sh-vert>
-            <sh-vert gap="3">
-                <sh-button size="bigger">
+            <a href="/config/provider/add-rss/index.html"
+                ><sh-button size="big" type="ghost">
                     <img src="/shade-ui/icons/ListAdd.svg" alt="추가 아이콘" />
                     RSS로 내가 원하는 출처 직접 추가하기
-                </sh-button>
-                <sh-inline-link
-                    target="_blank"
-                    href="https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/gemma-lora-example.ipynb"
-                    text="RSS에 대해 알아보기"
-                >
-                </sh-inline-link>
-            </sh-vert>
+                </sh-button></a
+            >
+            <sh-input placeholder="검색 ..." type="search"></sh-input>
+            <provider-list></provider-list>
+            <sh-button size="bigger"> 완료 </sh-button>
         </sh-container-narrow>
     </body>
-    <script type="module" src="./render.tsx"></script>
 </html>

@@ -11,23 +11,22 @@ import actions from '../actions'
 
 import { getAllProviders, usingProviderIds } from './storage'
 import ProviderItem from './provider-item'
+import { noShadowDOM } from 'solid-element'
 
 function ProviderList() {
+    noShadowDOM()
     const [allProviders] = createResource(getAllProviders)
 
     return (
-        <Switch fallback={<Spinner color="var(--bk-color-l4)" />}>
+        <Switch
+            fallback={
+                <sh-vert x="center" y="center" data-filly>
+                    <Spinner color="var(--bk-color-l4)" />
+                </sh-vert>
+            }
+        >
             <Match when={allProviders.state === 'ready'}>
-                <sh-vert gap={4}>
-                    <sh-horz gap={2} y="top" linebreak>
-                        <For each={getUsingProviders(allProviders())}>
-                            {(provider) => (
-                                <sh-chip class={popAppearStyle}>
-                                    {provider.name}
-                                </sh-chip>
-                            )}
-                        </For>
-                    </sh-horz>
+                <sh-vert gap={4} scroll fade>
                     <For each={allProviders()}>
                         {(provider) => (
                             <sh-vert gap={4} class={popAppearProgressiveStyle}>
@@ -47,6 +46,15 @@ function ProviderList() {
                         )}
                     </For>
                 </sh-vert>
+                <sh-horz gap={2} x="center" y="top" linebreak>
+                    <For each={getUsingProviders(allProviders())}>
+                        {(provider) => (
+                            <sh-chip class={popAppearStyle}>
+                                {provider.name}
+                            </sh-chip>
+                        )}
+                    </For>
+                </sh-horz>
             </Match>
         </Switch>
     )

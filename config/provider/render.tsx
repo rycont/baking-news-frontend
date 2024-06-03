@@ -1,8 +1,5 @@
-import { assert } from '@utils/assert'
-import { render } from 'solid-js/web'
-
+import './style.css'
+import { customElement } from 'solid-element'
 import ProviderList from './widgets/provider-list'
 
-const renderTarget = document.getElementById('provider-list')
-assert(renderTarget, 'Cannot find renderTarget #app in this document')
-render(() => <ProviderList />, renderTarget)
+customElement('provider-list', ProviderList)
