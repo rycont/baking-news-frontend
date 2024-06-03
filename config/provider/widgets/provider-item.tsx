@@ -1,6 +1,7 @@
-import '@shade/elements/checkbox'
-import { providerTextWrapperStyle, providerUrlStyle } from './style.css'
 import { JSX } from 'solid-js'
+import '@shade/elements/checkbox'
+
+import { providerTextWrapperStyle, providerUrlStyle } from './style.css'
 
 export default function ProviderItem(props: {
     name: string
@@ -25,34 +26,3 @@ export default function ProviderItem(props: {
         </label>
     )
 }
-
-// function ProviderItem(props: { id: string }) {
-//     // if (allProviders.state !== 'ready') {
-//     //     return null
-//     // }
-
-//     const provider = () => allProviders().find((p) => p.id === props.id)
-
-//     // if (!provider) {
-//     //     return null
-//     // }
-
-//     return (
-//         <Switch>
-//             <Match when={allProviders.state === 'ready'}>
-//                 <ProviderItemView
-//                     name={provider().name}
-//                     url={provider().url}
-//                     enabled={isProviderEnabled(props.id)}
-//                     onChange={(e) => onChange(e.target.checked, props.id)}
-//                 />
-//             </Match>
-//         </Switch>
-//     )
-// }
-
-// function isProviderEnabled(id: string) {
-//     return usingProviderIds().includes(id)
-// }
-
-// export default ProviderItem

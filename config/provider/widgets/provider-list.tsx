@@ -1,19 +1,16 @@
-import { For, Match, Switch, createResource } from 'solid-js'
-
-import '@shade/elements/divider'
+import { popAppearProgressiveStyle, popAppearStyle } from '@shade/theme.css'
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
+import '@shade/elements/divider'
 import '@shade/elements/chip'
 
-import ProviderItem from './provider-item'
-import {
-    getAllProviders,
-    setUsingProviderIds,
-    usingProviderIds,
-} from './storage'
-import { popAppearProgressiveStyle, popAppearStyle } from '@shade/theme.css'
-import { Collections, ContentProvidersResponse } from '@/pocketbase-types'
-import { pb } from '@/db'
+import { ContentProvidersResponse } from '@/pocketbase-types'
+
+import { For, Match, Switch, createResource } from 'solid-js'
+
 import actions from '../actions'
+
+import { getAllProviders, usingProviderIds } from './storage'
+import ProviderItem from './provider-item'
 
 function ProviderList() {
     const [allProviders] = createResource(getAllProviders)
