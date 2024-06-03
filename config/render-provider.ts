@@ -4,6 +4,7 @@ import { Result } from '@/types/result'
 import { ContentProvidersResponse } from '@/pocketbase-types'
 import { providerListItemStyle } from './style.css'
 import { smallText } from '@shade/elements/typo/style.css'
+import { popAppearProgressiveStyle } from '@shade/theme.css'
 
 const elements = getElements({
     providers: HTMLDivElement,
@@ -41,7 +42,11 @@ async function getUsingProviders(): Promise<
 
 function addProviderCard(provider: ContentProvidersResponse) {
     const providerCard = document.createElement('div')
-    providerCard.classList.add(providerListItemStyle, smallText)
+    providerCard.classList.add(
+        providerListItemStyle,
+        smallText,
+        popAppearProgressiveStyle
+    )
 
     const providerName = document.createTextNode(provider.name)
     providerCard.appendChild(providerName)

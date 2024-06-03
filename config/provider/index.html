@@ -18,17 +18,15 @@
             type="module"
             src="/shade-ui/dist/elements/title-bar/index.js"
         ></script>
-        <script
-            type="module"
-            src="/shade-ui/dist/elements/button/index.js"
-        ></script>
-        <script
-            type="module"
-            src="/shade-ui/dist/elements/input/index.js"
-        ></script>
+        <script type="module" src="/shade-ui/elements/button/index.ts"></script>
+        <script type="module" src="/shade-ui/elements/input/index.ts"></script>
         <script
             type="module"
             src="/shade-ui/dist/elements/hovert/index.js"
+        ></script>
+        <script
+            type="module"
+            src="/shade-ui/elements/inline-link/index.ts"
         ></script>
     </head>
     <body>
@@ -40,6 +38,17 @@
             </sh-title-bar>
             <sh-input placeholder="검색 ..." type="search"></sh-input>
             <sh-vert id="provider-list"> </sh-vert>
+            <sh-vert gap="3">
+                <sh-button icon="/shade-ui/icons/AddFile.svg" size="bigger">
+                    RSS로 내가 원하는 출처 직접 추가하기
+                </sh-button>
+                <sh-inline-link
+                    target="_blank"
+                    href="https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/gemma-lora-example.ipynb"
+                    text="RSS에 대해 알아보기"
+                >
+                </sh-inline-link>
+            </sh-vert>
         </sh-container-narrow>
     </body>
     <script type="module" src="./render.tsx"></script>

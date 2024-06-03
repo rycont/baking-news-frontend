@@ -4,7 +4,7 @@ import { render } from 'solid-js/web'
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
 import editIcon from '@shade/icons/Pen.svg?url'
 
-import { popAppearStyle } from '@shade/theme.css.ts'
+import { popAppearProgressiveStyle } from '@shade/theme.css.ts'
 
 import { createNewsletterFromArticles } from '@utils/api.ts'
 import { assert } from '@utils/assert'
@@ -68,7 +68,10 @@ const App = () => {
                         <sh-vert gap={2}>
                             <For each={generationLog()}>
                                 {(logline) => (
-                                    <sh-text L6 class={popAppearStyle}>
+                                    <sh-text
+                                        L6
+                                        class={popAppearProgressiveStyle}
+                                    >
                                         {logline}
                                     </sh-text>
                                 )}

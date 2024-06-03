@@ -12,18 +12,20 @@ function ProviderItemView(props: {
     onChange: JSX.ChangeEventHandlerUnion<HTMLInputElement, Event>
 }) {
     return (
-        <sh-horz x="space" y="center" gap={3}>
-            <sh-vert gap={1} class={providerTextWrapperStyle}>
-                <sh-subtitle>{props.name}</sh-subtitle>
-                <sh-text L6 class={providerUrlStyle}>
-                    {props.url}
-                </sh-text>
-            </sh-vert>
-            <sh-checkbox
-                attr:checked={props.enabled ? true : null}
-                onChange={props.onChange}
-            />
-        </sh-horz>
+        <label>
+            <sh-horz x="space" y="center" gap={3}>
+                <sh-vert gap={1} class={providerTextWrapperStyle}>
+                    <sh-subtitle>{props.name}</sh-subtitle>
+                    <sh-text L6 class={providerUrlStyle}>
+                        {props.url}
+                    </sh-text>
+                </sh-vert>
+                <sh-checkbox
+                    attr:checked={props.enabled ? true : null}
+                    onChange={props.onChange}
+                />
+            </sh-horz>
+        </label>
     )
 }
 

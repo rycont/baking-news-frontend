@@ -11,7 +11,7 @@ import { pb } from '@/db'
 import { Collections, UsersReadingLevelOptions } from '@/pocketbase-types'
 import { getMe } from '@utils/getMe'
 import { For, Show, createSignal } from 'solid-js'
-import { popAppearStyle } from '@shade/theme.css'
+import { popAppearProgressiveStyle } from '@shade/theme.css'
 
 const [responseMesage, setResponseMessage] = createSignal<string | null>(null)
 
@@ -49,7 +49,9 @@ export function FeedbackPanel() {
                     </For>
                 </sh-vert>
                 <Show when={responseMesage()}>
-                    <sh-text class={popAppearStyle}>{responseMesage}</sh-text>
+                    <sh-text class={popAppearProgressiveStyle}>
+                        {responseMesage}
+                    </sh-text>
                 </Show>
             </sh-card>
         </>
