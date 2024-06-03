@@ -35,7 +35,7 @@ if (!interests) {
 }
 
 if (!usingProviders || usingProviders.length === 0) {
-    location.href = '/setup-providers/index.html'
+    location.href = '/config/index.html'
     throw new Error('No providers')
 }
 
@@ -62,7 +62,8 @@ const App = () => {
                                 </For>
                             </sh-horz>
                         </sh-card>
-                        <sh-button attr:type="ghost" attr:icon={editIcon}>
+                        <sh-button attr:type="ghost">
+                            <img src={editIcon} />
                             수정
                         </sh-button>
                         <sh-vert gap={2}>

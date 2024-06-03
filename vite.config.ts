@@ -21,6 +21,7 @@ export default defineConfig({
         rollupOptions: {
             input: entryPoint,
         },
+        assetsInlineLimit: 0,
     },
     plugins: [
         vanillaExtractPlugin({

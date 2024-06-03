@@ -32,14 +32,21 @@
     <body>
         <sh-container-narrow>
             <sh-title-bar title="사용할 출처" back>
-                <sh-button icon="/shade-ui/icons/AddFile.svg" type="ghost">
-                    RSS 추가하기
-                </sh-button>
+                <a href="/config/provider/add-rss/index.html"
+                    ><sh-button type="ghost">
+                        <img
+                            src="/shade-ui/icons/ListAdd.svg"
+                            alt="추가 아이콘"
+                        />
+                        RSS 추가하기
+                    </sh-button></a
+                >
             </sh-title-bar>
             <sh-input placeholder="검색 ..." type="search"></sh-input>
             <sh-vert id="provider-list"> </sh-vert>
             <sh-vert gap="3">
-                <sh-button icon="/shade-ui/icons/AddFile.svg" size="bigger">
+                <sh-button size="bigger">
+                    <img src="/shade-ui/icons/ListAdd.svg" alt="추가 아이콘" />
                     RSS로 내가 원하는 출처 직접 추가하기
                 </sh-button>
                 <sh-inline-link

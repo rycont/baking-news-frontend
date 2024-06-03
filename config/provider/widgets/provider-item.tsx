@@ -1,11 +1,8 @@
 import '@shade/elements/checkbox'
 import { providerTextWrapperStyle, providerUrlStyle } from './style.css'
-import { allProviders, setUsingProviderIds, usingProviderIds } from './storage'
 import { JSX } from 'solid-js'
-import { pb } from '@/db'
-import { Collections } from '@/pocketbase-types'
 
-function ProviderItemView(props: {
+export default function ProviderItem(props: {
     name: string
     url: string
     enabled: boolean
@@ -29,46 +26,33 @@ function ProviderItemView(props: {
     )
 }
 
-const onChange = async (checked: boolean, id: string) => {
-    if (!pb.authStore.model) {
-        location.href = '/login/index.html'
-        return
-    }
+// function ProviderItem(props: { id: string }) {
+//     // if (allProviders.state !== 'ready') {
+//     //     return null
+//     // }
 
-    let newUsingProviderIds = usingProviderIds()
+//     const provider = () => allProviders().find((p) => p.id === props.id)
 
-    if (checked) {
-        newUsingProviderIds = [...newUsingProviderIds, id]
-    } else {
-        newUsingProviderIds = newUsingProviderIds.filter((p) => p !== id)
-    }
+//     // if (!provider) {
+//     //     return null
+//     // }
 
-    setUsingProviderIds(newUsingProviderIds)
+//     return (
+//         <Switch>
+//             <Match when={allProviders.state === 'ready'}>
+//                 <ProviderItemView
+//                     name={provider().name}
+//                     url={provider().url}
+//                     enabled={isProviderEnabled(props.id)}
+//                     onChange={(e) => onChange(e.target.checked, props.id)}
+//                 />
+//             </Match>
+//         </Switch>
+//     )
+// }
 
-    await pb.collection(Collections.Users).update(pb.authStore.model.id, {
-        using_providers: newUsingProviderIds,
-    })
-}
+// function isProviderEnabled(id: string) {
+//     return usingProviderIds().includes(id)
+// }
 
-function ProviderItem(props: { id: string }) {
-    const provider = allProviders.find((p) => p.id === props.id)
-
-    if (!provider) {
-        return null
-    }
-
-    return (
-        <ProviderItemView
-            name={provider.name}
-            url={provider.url}
-            enabled={isProviderEnabled(props.id)}
-            onChange={(e) => onChange(e.target.checked, props.id)}
-        />
-    )
-}
-
-function isProviderEnabled(id: string) {
-    return usingProviderIds().includes(id)
-}
-
-export default ProviderItem
+// export default ProviderItem

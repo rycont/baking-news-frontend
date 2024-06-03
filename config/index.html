@@ -15,10 +15,7 @@
             type="module"
             src="/shade-ui/dist/elements/card/index.js"
         ></script>
-        <script
-            type="module"
-            src="/shade-ui/dist/elements/button/index.js"
-        ></script>
+        <script type="module" src="/shade-ui/elements/button/index.ts"></script>
         <script
             type="module"
             src="/shade-ui/dist/elements/hovert/index.js"
@@ -36,14 +33,21 @@
                     <sh-subtitle> 사용할 출처 </sh-subtitle>
                     <div id="providers"></div>
                     <a href="provider/index.html">
-                        <sh-button type="ghost" icon="/shade-ui/icons/Pen.svg">
+                        <sh-button type="ghost">
+                            <img
+                                src="/shade-ui/icons/Pen.svg"
+                                alt="펜 아이콘"
+                            />
                             수정
                         </sh-button></a
                     >
                 </sh-card>
                 <sh-card>
                     <sh-subtitle> 내 관심사 </sh-subtitle>
-                    <sh-button type="ghost"> 관심사 추가 </sh-button>
+                    <sh-button type="ghost">
+                        <img src="/shade-ui/icons/Pen.svg" alt="펜 아이콘" />
+                        관심사 추가
+                    </sh-button>
                 </sh-card>
             </sh-vert>
         </app-wrapper>

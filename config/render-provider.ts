@@ -27,10 +27,17 @@ async function getUsingProviders(): Promise<
     const me = await getMe()
     const usingProviders = me.expand?.using_providers
 
-    if (!usingProviders) {
+    if (!me) {
         return {
             success: false,
             error: 'not-logged-in',
+        }
+    }
+
+    if (!usingProviders) {
+        return {
+            success: true,
+            value: [],
         }
     }
 
