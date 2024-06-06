@@ -15,6 +15,12 @@
         <script type="module" src="/shade-ui/elements/button/index.ts"></script>
         <link rel="stylesheet" href="/shade-ui/suit.css" />
         <link rel="stylesheet" href="/shade-ui/dist/style.css" />
+
+        <style>
+            #save_icon {
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <sh-container-narrow>
@@ -39,6 +45,16 @@
                             ></sh-input>
                         </sh-label>
                         <sh-button size="bigger" type="submit" id="button">
+                            <img
+                                src="/shade-ui/icons/Link.svg"
+                                id="link_icon"
+                                alt="연결 아이콘"
+                            />
+                            <img
+                                src="/shade-ui/icons/Save.svg"
+                                id="save_icon"
+                                alt="저장 아이콘"
+                            />
                             가져오기
                         </sh-button>
                     </sh-vert>

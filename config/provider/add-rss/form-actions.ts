@@ -8,6 +8,8 @@ import { useRSSProvider } from './use-rss-provider'
 
 const elements = getElements({
     button: HTMLElement,
+    link_icon: HTMLImageElement,
+    save_icon: HTMLImageElement,
 })
 
 export default {
@@ -21,6 +23,11 @@ export default {
 
         const { title } = rssValidationResult.value
         showNameInput(title)
+
+        elements.button.textContent = '저장하기'
+
+        elements.link_icon.style.setProperty('display', 'none')
+        elements.save_icon.style.setProperty('display', 'inline')
     },
     async register(url: string, name: string) {
         const addProviderResult = await addRSSProvider(url, name)
