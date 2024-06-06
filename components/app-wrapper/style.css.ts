@@ -10,6 +10,7 @@ export const wrapperStyle = style({
     paddingTop: 'calc(env(safe-area-inset-top) + 12rem)',
     position: 'relative',
     overflowY: 'auto',
+    boxSizing: 'border-box',
 })
 
 globalStyle(':root', {

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script type="module" src="/shade-ui/elements/hovert/index.ts"></script>
+        <script
+            type="module"
+            src="/shade-ui/elements/container-narrow/index.ts"
+        ></script>
+        <script type="module" src="/shade-ui/elements/typo/index.ts"></script>
+        <script type="module" src="/shade-ui/elements/label/index.ts"></script>
+        <script type="module" src="/shade-ui/elements/input/index.ts"></script>
+        <script type="module" src="/shade-ui/elements/button/index.ts"></script>
+        <link rel="stylesheet" href="/shade-ui/suit.css" />
+        <link rel="stylesheet" href="/shade-ui/dist/style.css" />
+    </head>
+    <body>
+        <sh-container-narrow>
+            <sh-vert data-filly y="center" gap="6">
+                <sh-vert gap="3">
+                    <sh-title> RSS(Atom) 피드 등록하기 </sh-title>
+                    <sh-text L8>
+                        등록한 피드는 출처 목록에 추가돼서 다른 사람도 함께
+                        사용할 수 있어요
+                    </sh-text>
+                </sh-vert>
+                <form id="url_form">
+                    <input type="submit" hidden />
+                    <sh-vert gap="6">
+                        <sh-label title="피드 주소">
+                            <sh-input
+                                autofocus
+                                required
+                                placeholder="https://example.com/rss.xml"
+                                type="url"
+                                name="url"
+                            ></sh-input>
+                        </sh-label>
+                        <sh-button size="bigger" type="submit" id="button">
+                            가져오기
+                        </sh-button>
+                    </sh-vert>
+                </form>
+            </sh-vert>
+        </sh-container-narrow>
+        <script type="module" src="./script.ts"></script>
+    </body>
+</html>
