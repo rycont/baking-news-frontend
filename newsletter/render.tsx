@@ -30,7 +30,7 @@ const interests = me.interests
 const usingProviders = me.expand?.using_providers
 
 if (!interests) {
-    location.href = '/setup-interests/index.html'
+    location.href = '/config/index.html'
     throw new Error('No interests')
 }
 
