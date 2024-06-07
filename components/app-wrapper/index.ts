@@ -1,5 +1,5 @@
-import { ShadeContainerNarrow } from '@shade/dist/elements/container-narrow'
 import { DefineOnce } from '@shade/util'
+import { ShadeContainerNarrow } from '@shade/elements/container-narrow'
 import { BOTTOM_BAR, BottomBar } from '../bottom-bar'
 import { wrapperStyle } from './style.css'
 
