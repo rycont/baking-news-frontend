@@ -16,6 +16,7 @@ import Chip, { ShadeChipProps } from '@shade/dist/elements/chip'
 import Button, { ShadeButtonProps } from '@shade/dist/elements/button'
 import Divider, { ShadeDividerProps } from '@shade/dist/elements/divider'
 import Checkbox, { ShadeCheckboxProps } from '@shade/dist/elements/checkbox'
+import Input, { ShadeInputProps } from '@shade/dist/elements/input'
 import { ShadeTypoProps } from '@shade/dist/elements/typo'
 import GradualRenderer, {
     GradualRendererProps,
@@ -35,6 +36,7 @@ declare module 'solid-js' {
             [GradualRenderer]: SolidProps<GradualRendererProps>
             [Checkbox]: SolidProps<ShadeCheckboxProps, HTMLInputElement>
             [Divider]: SolidProps<ShadeDividerProps>
+            [Input]: SolidProps<ShadeInputProps, HTMLInputElement>
         }
     }
 }

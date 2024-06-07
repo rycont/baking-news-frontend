@@ -24,12 +24,16 @@
             type="module"
             src="/shade-ui/dist/elements/title-bar/index.js"
         ></script>
+        <script
+            type="module"
+            src="/components/interest-editor/index.tsx"
+        ></script>
     </head>
     <body>
         <app-wrapper appbar>
             <sh-title-bar title="설정"> </sh-title-bar>
             <sh-vert gap="3">
-                <sh-card>
+                <sh-card class="bk-progressively-appear">
                     <sh-subtitle> 사용할 출처 </sh-subtitle>
                     <div id="providers"></div>
                     <a href="provider/index.html">
@@ -42,13 +46,8 @@
                         </sh-button></a
                     >
                 </sh-card>
-                <sh-card>
-                    <sh-subtitle> 내 관심사 </sh-subtitle>
-                    <sh-button type="ghost">
-                        <img src="/shade-ui/icons/Pen.svg" alt="펜 아이콘" />
-                        관심사 추가
-                    </sh-button>
-                </sh-card>
+                <interest-editor class="bk-progressively-appear">
+                </interest-editor>
             </sh-vert>
         </app-wrapper>
         <script type="module" src="./render-provider.ts"></script>
