@@ -28,6 +28,10 @@
             type="module"
             src="/components/interest-editor/index.tsx"
         ></script>
+        <script
+            type="module"
+            src="/components/provider-editor/index.tsx"
+        ></script>
         <style>
             #providers.loading {
                 opacity: 0.16;
@@ -44,28 +48,10 @@
         <app-wrapper appbar>
             <sh-title-bar title="설정"> </sh-title-bar>
             <sh-vert gap="3">
-                <sh-card class="bk-progressively-appear">
-                    <sh-subtitle> 사용할 출처 </sh-subtitle>
-                    <div id="providers" class="loading">
-                        <img
-                            src="/shade-ui/icons/animated/spinner.svg"
-                            alt=""
-                        />
-                    </div>
-                    <a href="provider/index.html">
-                        <sh-button type="ghost">
-                            <img
-                                src="/shade-ui/icons/Pen.svg"
-                                alt="펜 아이콘"
-                            />
-                            수정
-                        </sh-button></a
-                    >
-                </sh-card>
+                <provider-editor></provider-editor>
                 <interest-editor class="bk-progressively-appear">
                 </interest-editor>
             </sh-vert>
         </app-wrapper>
-        <script type="module" src="./render-provider.ts"></script>
     </body>
 </html>

@@ -1,4 +1,4 @@
-import { For, Match, Show, Switch, createSignal } from 'solid-js'
+import { For, Match, Show, Switch, createEffect, createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
 
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
@@ -18,6 +18,9 @@ import { pb } from '@/db'
 import { getFreshArticles } from '../scripts/getFreshArticles.ts'
 import { FeedbackPanel } from './widgets/feedback.tsx'
 
+import { InterestEditor } from '@components/interest-editor/index.tsx'
+import '@components/provider-editor/index.tsx'
+
 const isLoggedIn = pb.authStore.isValid
 
 if (!isLoggedIn) {
@@ -26,23 +29,45 @@ if (!isLoggedIn) {
 
 const me = await getMe()
 
-const interests = me.interests
-const usingProviders = me.expand?.using_providers
-
-if (!interests) {
-    location.href = '/config/index.html'
-    throw new Error('No interests')
-}
-
-if (!usingProviders || usingProviders.length === 0) {
-    location.href = '/config/index.html'
-    throw new Error('No providers')
-}
+const [interests, setInterests] = createSignal(me.interests)
+const [usingProviders] = createSignal(me.expand?.using_providers)
 
 const [generationLog, setGenerationLog] = createSignal<string[]>([])
 const [newsletterContent, setNewsletterContent] = createSignal<string>('')
 const [referringArticles, setReferringArticles] = createSignal<Article[]>([])
 const [isFeedbackPanelVisible, setFeedbackPanelVisiblity] = createSignal(false)
+
+function isInterestValid() {
+    const storedInterests = interests()
+    return (
+        storedInterests &&
+        storedInterests.filter((interest) => interest.trim().length > 0)
+            .length > 0
+    )
+}
+
+function isProvidersValid() {
+    const storedProviders = usingProviders()
+    return storedProviders && storedProviders.length > 0
+}
+
+async function refetchInterests() {
+    getMe.invalidate()
+    const me = await getMe()
+    setInterests(me.interests)
+}
+
+function getTitle() {
+    if (!isInterestValid()) {
+        return '관심사가 등록되지 않았어요'
+    }
+
+    if (!isProvidersValid()) {
+        return '어떤 출처에서 글을 받아올까요?'
+    }
+
+    return '신선한 뉴스레터를 굽고있어요'
+}
 
 const App = () => {
     return (
@@ -51,21 +76,47 @@ const App = () => {
                 fallback={
                     <>
                         <Spinner color="var(--bk-color-l4)" />
-                        <sh-title>신선한 뉴스레터를 굽고있어요</sh-title>
-                        <sh-card>
-                            <sh-subtitle>내 관심사</sh-subtitle>
-                            <sh-horz gap={1} linebreak>
-                                <For each={interests}>
-                                    {(interest) => (
-                                        <sh-chip>{interest}</sh-chip>
-                                    )}
-                                </For>
-                            </sh-horz>
-                        </sh-card>
-                        <sh-button attr:type="ghost">
-                            <img src={editIcon} />
-                            수정
-                        </sh-button>
+                        <sh-title>{getTitle()}</sh-title>
+                        <Switch
+                            fallback={
+                                <>
+                                    <sh-card>
+                                        <sh-subtitle>내 관심사</sh-subtitle>
+                                        <sh-horz gap={1} linebreak>
+                                            <For each={interests()}>
+                                                {(interest) => (
+                                                    <sh-chip>
+                                                        {interest}
+                                                    </sh-chip>
+                                                )}
+                                            </For>
+                                        </sh-horz>
+                                    </sh-card>
+                                    <sh-button attr:type="ghost">
+                                        <img src={editIcon} />
+                                        수정
+                                    </sh-button>
+                                </>
+                            }
+                        >
+                            <Match when={!isInterestValid()}>
+                                <InterestEditor />
+                                <sh-button
+                                    size="big"
+                                    class={popAppearProgressiveStyle}
+                                    onClick={refetchInterests}
+                                >
+                                    <img
+                                        src="/shade-ui/icons/Send.svg"
+                                        alt="전송 아이콘"
+                                    />
+                                    입력 완료
+                                </sh-button>
+                            </Match>
+                            <Match when={!isProvidersValid()}>
+                                <provider-editor />
+                            </Match>
+                        </Switch>
                         <sh-vert gap={2}>
                             <For each={generationLog()}>
                                 {(logline) => (
@@ -102,31 +153,43 @@ assert(renderTarget, 'Cannot find renderTarget #app in this document')
 
 render(() => <App />, renderTarget)
 
-const articles = await getArticlesFromProviders(usingProviders)
-setGenerationLog((prev) => [...prev, '어떤 글을 좋아할지 고민하고 있어요'])
-
-if (articles.length === 0) {
-    setGenerationLog((prev) => [...prev, '아무것도 읽지 못했어요'])
-    throw new Error('No articles')
-}
-
-const newsletterResult = await createNewsletterFromArticles(articles, {
-    token: (token) => {
-        setNewsletterContent((prev) => prev + token)
-    },
-    relatedArticles: (articles) => {
-        setReferringArticles(articles)
-        setGenerationLog((prev) => [...prev, '뉴스레터를 작성하고 있어요'])
-    },
+createEffect(() => {
+    if (isInterestValid() && isProvidersValid()) {
+        renderNewsletter()
+    }
 })
 
-setFeedbackPanelVisiblity(true)
+async function renderNewsletter() {
+    if (!isInterestValid()) {
+        return
+    }
 
-const now = +new Date()
-localStorage.setItem(
-    NEWSLETTER_STORAGE_PREFIX + now,
-    JSON.stringify(newsletterResult)
-)
+    const articles = await getArticlesFromProviders(usingProviders()!)
+    setGenerationLog((prev) => [...prev, '어떤 글을 좋아할지 고민하고 있어요'])
+
+    if (articles.length === 0) {
+        setGenerationLog((prev) => [...prev, '아무것도 읽지 못했어요'])
+        throw new Error('No articles')
+    }
+
+    const newsletterResult = await createNewsletterFromArticles(articles, {
+        token: (token) => {
+            setNewsletterContent((prev) => prev + token)
+        },
+        relatedArticles: (articles) => {
+            setReferringArticles(articles)
+            setGenerationLog((prev) => [...prev, '뉴스레터를 작성하고 있어요'])
+        },
+    })
+
+    setFeedbackPanelVisiblity(true)
+
+    const now = +new Date()
+    localStorage.setItem(
+        NEWSLETTER_STORAGE_PREFIX + now,
+        JSON.stringify(newsletterResult)
+    )
+}
 
 async function getArticlesFromProviders(providers: ContentProvidersResponse[]) {
     const articlesByProviders = new Map<string, Article[]>()

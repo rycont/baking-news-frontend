@@ -22,6 +22,7 @@ import GradualRenderer, {
     GradualRendererProps,
 } from '@components/gradual-renderer'
 import InfoCard from '@components/info-card'
+import ProviderEditor from '@components/provider-editor'
 
 declare module 'solid-js' {
     namespace JSX {
@@ -40,6 +41,7 @@ declare module 'solid-js' {
             [Divider]: SolidProps<ShadeDividerProps>
             [Input]: SolidProps<ShadeInputProps, HTMLInputElement>
             [InfoCard]: SolidProps<{}, HTMLElement>
+            [ProviderEditor]: SolidProps<{}, HTMLElement>
         }
     }
 }
