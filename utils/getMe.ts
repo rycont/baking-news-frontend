@@ -22,5 +22,6 @@ export const getMe = cache(async function getMe() {
         return me
     } catch (e) {
         location.href = '/login/index.html'
+        throw e
     }
 })
