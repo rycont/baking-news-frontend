@@ -11,7 +11,16 @@ import { interestsSignal } from './storage'
 function InterestEditor() {
     noShadowDOM()
 
-    return <InterestEditorView onAddInterest={addInterest} />
+    const interestsQuantity = () => interestsSignal.get()?.length || 0
+    const noInterests = () => interestsSignal.get()?.length === 0
+
+    return (
+        <InterestEditorView
+            onAddInterest={addInterest}
+            interestsQuantity={interestsQuantity()}
+            noInterests={noInterests()}
+        />
+    )
 }
 
 async function addInterest() {

@@ -1,10 +1,18 @@
-import { For, Suspense } from 'solid-js'
+import { For, Show, Suspense } from 'solid-js'
 
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
-import InterestItem from './item'
-import { interestsSignal } from './storage'
+import { popAppearStyle } from '@shade/theme.css'
+import '@components/info-card'
 
-export function InterestEditorView(props: { onAddInterest: () => void }) {
+import InterestItem from './item'
+
+interface InterestEditorViewProps {
+    onAddInterest: () => void
+    interestsQuantity: number
+    noInterests: boolean
+}
+
+export function InterestEditorView(props: InterestEditorViewProps) {
     return (
         <sh-card>
             <sh-subtitle> 내 관심사 </sh-subtitle>
@@ -17,9 +25,15 @@ export function InterestEditorView(props: { onAddInterest: () => void }) {
                 }
             >
                 <sh-vert gap={2}>
-                    <For each={Array(interestsSignal.get()?.length)}>
+                    <For each={Array(props.interestsQuantity)}>
                         {(_, index) => <InterestItem index={index()} />}
                     </For>
+                    <Show when={props.noInterests}>
+                        <info-card class={popAppearStyle}>
+                            등록된 관심사가 없어요. 관심사를 등록하면 맞춤
+                            뉴스레터를 구워줄게요.
+                        </info-card>
+                    </Show>
                 </sh-vert>
                 <sh-button type="ghost" onClick={props.onAddInterest}>
                     <img src="/shade-ui/icons/Pen.svg" alt="펜 아이콘" />

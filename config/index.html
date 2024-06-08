@@ -28,6 +28,17 @@
             type="module"
             src="/components/interest-editor/index.tsx"
         ></script>
+        <style>
+            #providers.loading {
+                opacity: 0.16;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            #providers:not(.loading) img {
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <app-wrapper appbar>
@@ -35,7 +46,12 @@
             <sh-vert gap="3">
                 <sh-card class="bk-progressively-appear">
                     <sh-subtitle> 사용할 출처 </sh-subtitle>
-                    <div id="providers"></div>
+                    <div id="providers" class="loading">
+                        <img
+                            src="/shade-ui/icons/animated/spinner.svg"
+                            alt=""
+                        />
+                    </div>
                     <a href="provider/index.html">
                         <sh-button type="ghost">
                             <img
