@@ -1,0 +1,9 @@
+:root {
+    --sh-base-size: 4px;
+}
+
+@media screen and (max-width: 768px) {
+    :root {
+        --sh-base-size: 3.5px;
+    }
+}

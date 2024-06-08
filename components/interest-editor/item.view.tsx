@@ -22,7 +22,7 @@ export function InterestItemView(props: InterestItemViewProps) {
                 autofocus={props.autofocus}
             ></sh-input>
             <button class={trashButton} onClick={props.onRemove}>
-                <sh-horz p={3}>
+                <sh-horz>
                     <TrashIcon />
                 </sh-horz>
             </button>

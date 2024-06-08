@@ -3,7 +3,7 @@ import { globalStyle, style } from '@vanilla-extract/css'
 
 export const trashButton = style({
     border: 'none',
-    padding: 0,
+    padding: '3rem 0rem 3rem 3rem',
     margin: 0,
     alignSelf: 'stretch',
     background: 'transparent',

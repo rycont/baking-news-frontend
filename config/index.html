@@ -32,6 +32,7 @@
             type="module"
             src="/components/provider-editor/index.tsx"
         ></script>
+        <link rel="stylesheet" href="/common.css" />
         <style>
             #providers.loading {
                 opacity: 0.16;
@@ -51,6 +52,9 @@
                 <provider-editor></provider-editor>
                 <interest-editor class="bk-progressively-appear">
                 </interest-editor>
+                <a href="/login/index.html">
+                    <sh-button type="ghost">로그아웃</sh-button>
+                </a>
             </sh-vert>
         </app-wrapper>
     </body>
