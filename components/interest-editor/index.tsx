@@ -8,9 +8,7 @@ import '@shade/elements/typo'
 import { InterestEditorView } from './index.view'
 import { interestsSignal } from './storage'
 
-function InterestEditor() {
-    noShadowDOM()
-
+export function InterestEditor() {
     const interestsQuantity = () => interestsSignal.get()?.length || 0
     const noInterests = () => interestsSignal.get()?.length === 0
 
@@ -27,4 +25,8 @@ async function addInterest() {
     interestsSignal.set([...(interestsSignal.get() || []), ''])
 }
 
-customElement('interest-editor', InterestEditor)
+customElement('interest-editor', () => {
+    noShadowDOM()
+
+    return <InterestEditor />
+})
