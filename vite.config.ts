@@ -43,7 +43,26 @@ export default defineConfig({
             },
         }),
         solidPlugin(),
-        solidSvg(),
+        solidSvg({
+            svgo: {
+                enabled: true, // optional, by default is true
+                svgoConfig: {
+                    plugins: [
+                        {
+                            name: 'preset-default',
+                            params: {
+                                overrides: {
+                                    // viewBox is required to resize SVGs with CSS.
+                                    // @see https://github.com/svg/svgo/issues/1128
+                                    // @see https://github.com/jfgodoy/vite-plugin-solid-svg/issues/26
+                                    removeViewBox: false,
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        }),
     ],
     resolve: {
         alias: {
