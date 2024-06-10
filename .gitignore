@@ -25,3 +25,5 @@ dist-ssr
 
 id_rsa
 .env.local
+
+.idx
