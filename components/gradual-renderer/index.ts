@@ -20,9 +20,10 @@ export class GradualRenderer {
 
     constructor(private articleElement: HTMLElement) {}
 
-    render(content: string) {
+    async render(content: string) {
         for (const char of content) {
             this.renderChar(char)
+            await new Promise((r) => setTimeout(r, 1))
         }
     }
 
