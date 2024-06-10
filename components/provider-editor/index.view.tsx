@@ -1,6 +1,9 @@
 import { For, Match, Suspense, Switch } from 'solid-js'
+
 import '@shade/elements/chip'
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
+import PenIcon from '@shade/icons/Pen.svg?url'
+
 import style from './style.css'
 import { popAppearProgressiveStyle } from '@shade/theme.css'
 
@@ -46,7 +49,7 @@ export function ProviderEditorView(props: { usingProviders: string[] }) {
 
                 <a href="/config/provider/index.html?redirect=/newsletter/index.html">
                     <sh-button type="ghost">
-                        <img src="/shade-ui/icons/Pen.svg" alt="펜 아이콘" />
+                        <img src={PenIcon} alt="펜 아이콘" />
                         수정
                     </sh-button>
                 </a>

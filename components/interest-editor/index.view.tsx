@@ -1,6 +1,8 @@
 import { For, Show, Suspense } from 'solid-js'
 
 import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
+import PenIcon from '@shade/icons/Pen.svg?url'
+
 import { popAppearStyle } from '@shade/theme.css'
 import '@components/info-card'
 
@@ -36,7 +38,7 @@ export function InterestEditorView(props: InterestEditorViewProps) {
                     </Show>
                 </sh-vert>
                 <sh-button type="ghost" onClick={props.onAddInterest}>
-                    <img src="/shade-ui/icons/Pen.svg" alt="펜 아이콘" />
+                    <img src={PenIcon} alt="펜 아이콘" />
                     관심사 추가
                 </sh-button>
             </Suspense>
