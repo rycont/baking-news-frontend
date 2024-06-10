@@ -194,18 +194,44 @@ async function renderNewsletter() {
 async function getArticlesFromProviders(providers: ContentProvidersResponse[]) {
     const articlesByProviders = new Map<string, Article[]>()
 
-    for (const provider of providers) {
-        try {
-            const freshArticles = await getFreshArticles(provider)
-            setGenerationLog((prev) => [...prev, provider.name + ' 읽었어요'])
-            articlesByProviders.set(provider.id, freshArticles)
-        } catch (e) {
-            setGenerationLog((prev) => [
-                ...prev,
-                provider.name + ' 읽는 중 오류가 발생했어요',
-            ])
-        }
-    }
+    // for (const provider of providers) {
+
+    // }
+
+    await Promise.all(
+        providers.map(async (provider) => {
+            // getFreshArticles(provider)
+            //     .then((freshArticles) => {
+            //         setGenerationLog((prev) => [
+            //             ...prev,
+            //             provider.name + ' 읽었어요',
+            //         ])
+            //         articlesByProviders.set(provider.id, freshArticles)
+            //     })
+            //     .catch(() => {
+            //         setGenerationLog((prev) => [
+            //             ...prev,
+            //             provider.name + ' 읽는 중 오류가 발생했어요',
+            //         ])
+            //     })
+
+            try {
+                const freshArticles = await getFreshArticles(provider)
+
+                setGenerationLog((prev) => [
+                    ...prev,
+                    provider.name + ' 읽었어요',
+                ])
+
+                articlesByProviders.set(provider.id, freshArticles)
+            } catch (e) {
+                setGenerationLog((prev) => [
+                    ...prev,
+                    provider.name + ' 읽는 중 오류가 발생했어요',
+                ])
+            }
+        })
+    )
 
     const articleMap = getArticleWithMaxAmount(articlesByProviders)
     return [...articleMap.values()].flat()
