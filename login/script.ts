@@ -28,7 +28,7 @@ Baking News는 문해력과 관심사를 반영해 맞춤 뉴스레터를 제공
 
 ;(async () => {
     for (const char of content) {
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        // await new Promise((resolve) => setTimeout(resolve, 10))
         renderer.render(char)
     }
 })()

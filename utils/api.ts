@@ -1,6 +1,7 @@
+import { NEWSLETTER_STORAGE_PREFIX } from '@/constants'
 import { Article } from '../article'
 import { pb } from '../db'
-import { addUsedArticles } from './freshArticles'
+import { addUsedArticles, dismissUsedArticles } from './freshArticles'
 
 const API_URL = 'wss://baked-api.deno.dev/ws'
 
@@ -66,10 +67,18 @@ export async function createNewsletterFromArticles(
             if (payload.type === 'finished') {
                 addUsedArticles(articles.map((article) => article.link))
 
-                resolve({
+                const result = {
                     content: payload.data.content,
                     relatedArticles,
-                })
+                }
+
+                const now = +new Date()
+                localStorage.setItem(
+                    NEWSLETTER_STORAGE_PREFIX + now,
+                    JSON.stringify(result)
+                )
+
+                resolve(result)
             }
         })
     })
@@ -79,7 +88,8 @@ async function createMockNewsletterFromArticles(
     articles: Article[],
     events: NewsletterCreationEvents
 ) {
-    const usingArticle = articles.slice(0, 5)
+    const usingArticle = dismissUsedArticles(articles).slice(0, 5)
+    console.log(usingArticle)
 
     if (import.meta.env.VITE_FASTMOCK) {
         await new Promise((resolve) => setTimeout(resolve, 100))
@@ -116,6 +126,8 @@ ${article.link}라는 사실 알고 계셨나요? 꽤나 충격적이네요.`
 
         events.token(token)
     }
+
+    addUsedArticles(usingArticle.map((article) => article.link))
 
     return {
         content: mockContent,

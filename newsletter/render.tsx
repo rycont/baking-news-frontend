@@ -11,7 +11,6 @@ import { assert } from '@utils/assert'
 import { getMe } from '@utils/getMe'
 
 import { ContentProvidersResponse } from '@/pocketbase-types.ts'
-import { NEWSLETTER_STORAGE_PREFIX } from '@/constants.ts'
 import { Article } from '@/article.ts'
 import { pb } from '@/db'
 
@@ -20,6 +19,7 @@ import { FeedbackPanel } from './widgets/feedback.tsx'
 
 import { InterestEditor } from '@components/interest-editor/index.tsx'
 import '@components/provider-editor/index.tsx'
+import { getLastNewsletter } from '@/scripts/getLastNewsletter.ts'
 
 const isLoggedIn = pb.authStore.isValid
 
@@ -36,6 +36,7 @@ const [generationLog, setGenerationLog] = createSignal<string[]>([])
 const [newsletterContent, setNewsletterContent] = createSignal<string>('')
 const [referringArticles, setReferringArticles] = createSignal<Article[]>([])
 const [isFeedbackPanelVisible, setFeedbackPanelVisiblity] = createSignal(false)
+const [isPreviousNewsletter, setIsPreviousNewsletter] = createSignal(false)
 
 function isInterestValid() {
     const storedInterests = interests()
@@ -133,6 +134,12 @@ const App = () => {
                 }
             >
                 <Match when={newsletterContent()}>
+                    <Show when={isPreviousNewsletter}>
+                        <info-card>
+                            아직 새 소식이 충분하지 않아요. 이전 뉴스레터를
+                            보여드릴게요
+                        </info-card>
+                    </Show>
                     <gradual-renderer
                         attr:content={newsletterContent()}
                         attr:referring-article={JSON.stringify(
@@ -167,28 +174,30 @@ async function renderNewsletter() {
     const articles = await getArticlesFromProviders(usingProviders()!)
     setGenerationLog((prev) => [...prev, '어떤 글을 좋아할지 고민하고 있어요'])
 
-    if (articles.length === 0) {
+    if (articles.length < 5) {
         setGenerationLog((prev) => [...prev, '아무것도 읽지 못했어요'])
-        throw new Error('No articles')
+        const lastNewsletter = getLastNewsletter()
+
+        setReferringArticles(lastNewsletter.relatedArticles)
+        setNewsletterContent(lastNewsletter.content)
+
+        setIsPreviousNewsletter(true)
+    } else {
+        await createNewsletterFromArticles(articles, {
+            token: (token) => {
+                setNewsletterContent((prev) => prev + token)
+            },
+            relatedArticles: (articles) => {
+                setReferringArticles(articles)
+                setGenerationLog((prev) => [
+                    ...prev,
+                    '뉴스레터를 작성하고 있어요',
+                ])
+            },
+        })
     }
 
-    const newsletterResult = await createNewsletterFromArticles(articles, {
-        token: (token) => {
-            setNewsletterContent((prev) => prev + token)
-        },
-        relatedArticles: (articles) => {
-            setReferringArticles(articles)
-            setGenerationLog((prev) => [...prev, '뉴스레터를 작성하고 있어요'])
-        },
-    })
-
     setFeedbackPanelVisiblity(true)
-
-    const now = +new Date()
-    localStorage.setItem(
-        NEWSLETTER_STORAGE_PREFIX + now,
-        JSON.stringify(newsletterResult)
-    )
 }
 
 async function getArticlesFromProviders(providers: ContentProvidersResponse[]) {
