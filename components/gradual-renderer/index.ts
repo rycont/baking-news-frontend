@@ -20,10 +20,9 @@ export class GradualRenderer {
 
     constructor(private articleElement: HTMLElement) {}
 
-    async render(content: string) {
+    render(content: string) {
         for (const char of content) {
             this.renderChar(char)
-            await new Promise((r) => setTimeout(r, 1))
         }
     }
 
@@ -42,6 +41,8 @@ export class GradualRenderer {
             if (this.renderQueue.length < 5) {
                 break
             }
+
+            await new Promise((resolve) => setTimeout(resolve, 1))
 
             const content = this.renderQueue.shift()
 

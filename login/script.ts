@@ -19,7 +19,7 @@ renderer.referringArticles = [
     },
 ]
 
-const content = `# 꼭 너만을 위한 AI 뉴스레터,\nBaking News
+let content = `# 꼭 너만을 위한 AI 뉴스레터,\nBaking News
 
 [https://baking-news.vercel.app](https://baking-news.vercel.app)
 
@@ -27,8 +27,14 @@ Baking News는 문해력과 관심사를 반영해 맞춤 뉴스레터를 제공
 `
 
 ;(async () => {
-    for (const char of content) {
-        // await new Promise((resolve) => setTimeout(resolve, 10))
-        renderer.render(char)
+    while (content.length > 0) {
+        const token = content.slice(0, 3)
+        content = content.slice(3)
+
+        renderer.render(token)
     }
+    // for (const char of content) {
+    //     // await new Promise((resolve) => setTimeout(resolve, 10))
+    //     renderer.render(char)
+    // }
 })()
