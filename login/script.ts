@@ -1,5 +1,8 @@
+import { pb } from '@/db'
 import { GradualRenderer } from '../components/gradual-renderer'
 import { getElements } from '../utils/getElements'
+
+pb.authStore.clear()
 
 const elements = getElements({
     content_wrapper: HTMLElement,
