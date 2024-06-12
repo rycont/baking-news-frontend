@@ -1,5 +1,5 @@
 import { NEWSLETTER_STORAGE_PREFIX } from '../constants'
-import type { createNewsletterFromArticles } from '../utils/api'
+import type { createNewsletterFromArticles } from '../newsletter/actions/generateNewsletterContent'
 
 export function getLastNewsletter() {
     const keys = [...Array(localStorage.length)].map(

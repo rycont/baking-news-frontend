@@ -1,4 +1,4 @@
-import { Article } from '../../article'
+import { Article } from '../../types/article'
 import { buildLinkCard } from '../../linkCard'
 import INLINE_LINK, { ShadeInlineLink } from '@shade/dist/elements/inline-link'
 import { TEXT_CONTENT, TITLE } from '@shade/dist/elements/typo'

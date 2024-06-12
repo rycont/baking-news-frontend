@@ -2,7 +2,7 @@ import Parser from 'rss-parser/dist/rss-parser.min.js'
 import { extFetch } from '../extFetch'
 import { ContentProvidersResponse } from '../pocketbase-types'
 import { dismissUsedArticles } from '../utils/freshArticles'
-import { Article } from '../article'
+import { Article } from '../types/article'
 import { assert } from '../utils/assert'
 
 export async function getFreshArticles(provider: ContentProvidersResponse) {
