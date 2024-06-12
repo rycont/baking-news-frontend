@@ -27,7 +27,7 @@ if (!isLoggedIn) {
     location.href = '/login/index.html'
 }
 
-const me = await getMe()
+const me = await getMe.call()
 
 const [interests, setInterests] = createSignal(me.interests)
 const [usingProviders] = createSignal(me.expand?.using_providers)
@@ -53,8 +53,8 @@ function isProvidersValid() {
 }
 
 async function refetchInterests() {
-    getMe.invalidate()
-    const me = await getMe()
+    getMe.clearCache()
+    const me = await getMe.call()
     setInterests(me.interests)
 }
 

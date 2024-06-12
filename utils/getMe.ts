@@ -1,9 +1,9 @@
 import { pb } from '../db'
 import { ContentProvidersResponse, UsersResponse } from '../pocketbase-types'
 import { assert } from './assert'
-import { cache } from './cached'
+import { CachedFunction } from './cached'
 
-export const getMe = cache(async function getMe() {
+export const getMe = new CachedFunction(async () => {
     try {
         assert(pb.authStore.model)
         const myId = pb.authStore.model.id

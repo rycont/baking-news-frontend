@@ -1,29 +1,35 @@
-export function cache<
-    P extends [],
-    R extends unknown,
-    T extends (...arg0: P[]) => R
->(fn: T, duration: number = 1000 * 30): FunctionWithInvalidate<T> {
-    let lastRun = 0
-    let lastPromise: R | undefined
+// Implement `CachedFunction` class that caches the result of a function call for a given time period, in typescript.
+// The class should have the following methods:
+// - `constructor` - accepts a function and a cache time in milliseconds
+// - `call` - calls the function and caches the result for the given time period
+// - `clear` - clears the cache
 
-    const proxyFunction = function (...args: P) {
-        const isInvalid = Date.now() - lastRun > duration
+export class CachedFunction<Args, Return> {
+    private cacheDuration: number
+    private lastCall: number
+    private cache: Return | null
 
-        if (!lastPromise || isInvalid) {
-            lastPromise = fn(...args)
-            lastRun = Date.now()
-        }
+    static DEFAULT_CACHE_TIME = 1000 * 30
 
-        return lastPromise
-    } as FunctionWithInvalidate<T>
-
-    proxyFunction.invalidate = () => {
-        lastRun = 0
+    constructor(
+        private fn: (...args: Args[]) => Return,
+        cacheTime: number = CachedFunction.DEFAULT_CACHE_TIME
+    ) {
+        this.cacheDuration = cacheTime
+        this.cache = null
+        this.lastCall = 0
     }
 
-    return proxyFunction
-}
+    call(): ReturnType<typeof this.fn> {
+        const now = Date.now()
+        if (now - this.lastCall > this.cacheDuration || this.cache === null) {
+            this.cache = this.fn()
+            this.lastCall = now
+        }
+        return this.cache
+    }
 
-type FunctionWithInvalidate<T> = T & {
-    invalidate: () => void
+    clearCache() {
+        this.cache = null
+    }
 }

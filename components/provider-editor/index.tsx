@@ -15,7 +15,7 @@ function ProviderEditor() {
 }
 
 async function getUsingProviders(): Promise<ContentProvidersResponse[]> {
-    const me = await getMe()
+    const me = await getMe.call()
     const usingProviders = me.expand?.using_providers
 
     if (!me) {

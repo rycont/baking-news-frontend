@@ -16,7 +16,6 @@ export async function createNewsletterFromArticles(
 ) {
     const mock = import.meta.env.VITE_MOCK_NEWSLETTER_CREATION
     if (mock) {
-        console.log('Using mock newsletter creation')
         return createMockNewsletterFromArticles(articles, events)
     }
 
@@ -89,7 +88,6 @@ async function createMockNewsletterFromArticles(
     events: NewsletterCreationEvents
 ) {
     const usingArticle = dismissUsedArticles(articles).slice(0, 5)
-    console.log(usingArticle)
 
     if (import.meta.env.VITE_FASTMOCK) {
         await new Promise((resolve) => setTimeout(resolve, 100))

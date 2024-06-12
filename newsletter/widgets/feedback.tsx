@@ -71,7 +71,7 @@ function handleFeedback(feedback: string) {
 }
 
 async function moveReadingLevel(delta: number) {
-    const me = await getMe()
+    const me = await getMe.call()
     const currentReadingLevel = me.reading_level || UsersReadingLevelOptions.E15
 
     const currentIndex = READING_LEVEL_ORDER.indexOf(currentReadingLevel)

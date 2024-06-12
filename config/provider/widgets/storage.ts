@@ -7,5 +7,5 @@ export const getAllProviders = () =>
     pb.collection(Collections.ContentProviders).getFullList()
 
 export const [usingProviderIds, setUsingProviderIds] = createSignal<string[]>(
-    (await getMe()).using_providers
+    (await getMe.call()).using_providers
 )

@@ -3,7 +3,7 @@ import { Collections } from '@/pocketbase-types'
 import { getMe } from '@utils/getMe'
 
 export async function useRSSProvider(providerId: string) {
-    const me = await getMe()
+    const me = await getMe.call()
 
     const newUsingProviders = [...me.using_providers, providerId]
 
