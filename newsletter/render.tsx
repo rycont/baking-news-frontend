@@ -12,7 +12,6 @@ import { getMe } from '@utils/getMe'
 
 import { ContentProvidersResponse } from '@/pocketbase-types.ts'
 import { Article } from '@/article.ts'
-import { pb } from '@/db'
 
 import { getFreshArticles } from '../scripts/getFreshArticles.ts'
 import { FeedbackPanel } from './widgets/feedback.tsx'
@@ -20,12 +19,6 @@ import { FeedbackPanel } from './widgets/feedback.tsx'
 import { InterestEditor } from '@components/interest-editor/index.tsx'
 import '@components/provider-editor/index.tsx'
 import { getLastNewsletter } from '@/scripts/getLastNewsletter.ts'
-
-const isLoggedIn = pb.authStore.isValid
-
-if (!isLoggedIn) {
-    location.href = '/login/index.html'
-}
 
 const me = await getMe.call()
 
@@ -134,7 +127,7 @@ const App = () => {
                 }
             >
                 <Match when={newsletterContent()}>
-                    <Show when={isPreviousNewsletter}>
+                    <Show when={isPreviousNewsletter()}>
                         <info-card>
                             아직 새 소식이 충분하지 않아요. 이전 뉴스레터를
                             보여드릴게요
@@ -172,10 +165,17 @@ async function renderNewsletter() {
     }
 
     const articles = await getArticlesFromProviders(usingProviders()!)
-    setGenerationLog((prev) => [...prev, '어떤 글을 좋아할지 고민하고 있어요'])
+    setTimeout(
+        () =>
+            setGenerationLog((prev) => [
+                ...prev,
+                '어떤 글을 좋아할지 고민하고 있어요',
+            ]),
+        500
+    )
 
     if (articles.length < 5) {
-        setGenerationLog((prev) => [...prev, '아무것도 읽지 못했어요'])
+        setGenerationLog((prev) => [...prev, '아직 새 소식이 충분하지 않아요'])
         const lastNewsletter = getLastNewsletter()
 
         setReferringArticles(lastNewsletter.relatedArticles)

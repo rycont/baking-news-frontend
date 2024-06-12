@@ -7,15 +7,7 @@
     </head>
     <body>
         <script type="module">
-            import { pb } from './db.ts'
-
-            const isLoggedIn = pb.authStore.isValid
-
-            if (!isLoggedIn) {
-                location.href = '/login/index.html'
-            } else {
-                location.href = '/newsletter/index.html'
-            }
+            location.href = '/newsletter/index.html'
         </script>
     </body>
 </html>

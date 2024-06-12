@@ -18,11 +18,6 @@ async function getUsingProviders(): Promise<ContentProvidersResponse[]> {
     const me = await getMe.call()
     const usingProviders = me.expand?.using_providers
 
-    if (!me) {
-        location.href = '/login/index.html'
-        throw new Error('Not logged in')
-    }
-
     return usingProviders || []
 }
 
