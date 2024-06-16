@@ -1,293 +1,134 @@
-// import { For, Match, Show, Switch, createEffect, createSignal } from 'solid-js'
-// import { render } from 'solid-js/web'
+import { LLMNewsletterCreator } from '@/service/newsletter-generator/implements'
+import { MockNewsletterCreator } from '@/service/newsletter-generator/implements/mock'
+import { NewsletterCreationEvents } from '@/service/newsletter-generator/interface'
+import { Match, Suspense, Switch, createEffect } from 'solid-js'
+import {
+    setLogs,
+    setReferringArticle,
+    setNewsletterContent,
+    getNewsletterContent,
+    setIsEnd,
+    setIsStaleNewsletter,
+} from './storage'
+import { render } from 'solid-js/web'
+import { assert } from '@utils/assert'
+import { isPrepared } from './is-prepared'
+import '@components/provider-editor'
+import SlotFiller from './widgets/slot-filler'
+import RenderNewsletter from './widgets/render-newsletter'
+import LoadNewsletter from './widgets/load-newsletter'
+import { addUsedArticles, dismissUsedArticles } from '@utils/freshArticles'
+import { getRecentNewsletter, saveNewsletter } from './get-recent-newsletter'
+import { Provider } from '@/entity/provider'
+import { User } from '@/entity/user'
+import { getArticleWithMaxAmount } from '@/service/newsletter-generator/getArticleWithMaxAmount'
 
-// import Spinner from '@shade/icons/animated/spinner.svg?component-solid'
-// import editIcon from '@shade/icons/Pen.svg?url'
+function NewsletterPage(props: { prepared: ReturnType<typeof isPrepared> }) {
+    return (
+        <>
+            <Switch>
+                <Match when={props.prepared.success}>
+                    <Switch fallback={<LoadNewsletter />}>
+                        <Match when={getNewsletterContent()}>
+                            <RenderNewsletter />
+                        </Match>
+                    </Switch>
+                </Match>
+                <Match when={!props.prepared.success && props.prepared.error}>
+                    {(reason) => <SlotFiller reason={reason()} />}
+                </Match>
+            </Switch>
+        </>
+    )
+}
 
-// import { popAppearProgressiveStyle } from '@shade/theme.css.ts'
+const renderTarget = document.getElementById('app')
+assert(renderTarget, 'Cannot find renderTarget #app in this document')
 
-// import { createNewsletterFromArticles } from '@utils/api.ts'
-// import { assert } from '@utils/assert'
-// import { getMe } from '@utils/getMe'
+render(
+    () => (
+        <Suspense fallback={<></>}>
+            <NewsletterPage prepared={isPrepared()} />
+        </Suspense>
+    ),
+    renderTarget
+)
 
-// import { ContentProvidersResponse } from '@/pocketbase-types.ts'
-// import { Article } from '@/article.ts'
+createEffect(() => {
+    if (!isPrepared().success) return
 
-// import { getFreshArticles } from '../scripts/getFreshArticles.ts'
-// import { FeedbackPanel } from './widgets/feedback.tsx'
+    createNewsletter({
+        finished() {
+            console.log('예?')
+            setIsEnd(true)
+        },
+        relatedArticles(articles) {
+            setReferringArticle(articles)
+            addUsedArticles(articles.map((article) => article.link))
+        },
+        token(token) {
+            setNewsletterContent((prev) => prev + token)
+        },
+    })
+})
 
-// import { InterestEditor } from '@components/interest-editor/index.tsx'
-// import '@components/provider-editor/index.tsx'
-// import { getLastNewsletter } from '@/scripts/getLastNewsletter.ts'
+async function createNewsletter(events: NewsletterCreationEvents) {
+    const newsletterCreator = import.meta.env.VITE_MOCK_NEWSLETTER_CREATION
+        ? new MockNewsletterCreator()
+        : new LLMNewsletterCreator()
 
-// const me = await getMe.call()
+    newsletterCreator.pubsub.sub('relatedArticles', events.relatedArticles)
+    newsletterCreator.pubsub.sub('token', events.token)
+    newsletterCreator.pubsub.sub('finished', events.finished)
 
-// const [interests, setInterests] = createSignal(me.interests)
-// const [usingProviders] = createSignal(me.expand?.using_providers)
+    const freshArticles = await getArticles()
 
-// const [generationLog, setGenerationLog] = createSignal<string[]>([])
-// const [newsletterContent, setNewsletterContent] = createSignal<string>('')
-// const [referringArticles, setReferringArticles] = createSignal<Article[]>([])
-// const [isFeedbackPanelVisible, setFeedbackPanelVisiblity] = createSignal(false)
-// const [isPreviousNewsletter, setIsPreviousNewsletter] = createSignal(false)
+    if (freshArticles.length < 5) {
+        const recentNewsletter = getRecentNewsletter()
 
-// function isInterestValid() {
-//     const storedInterests = interests()
-//     return (
-//         storedInterests &&
-//         storedInterests.filter((interest) => interest.trim().length > 0)
-//             .length > 0
-//     )
-// }
+        events.relatedArticles(recentNewsletter.relatedArticles)
+        events.token(recentNewsletter.content)
+        events.finished(recentNewsletter)
 
-// function isProvidersValid() {
-//     const storedProviders = usingProviders()
-//     return storedProviders && storedProviders.length > 0
-// }
+        setIsStaleNewsletter(true)
 
-// async function refetchInterests() {
-//     getMe.clearCache()
-//     const me = await getMe.call()
-//     setInterests(me.interests)
-// }
+        return
+    }
 
-// function getTitle() {
-//     if (!isInterestValid()) {
-//         return '관심사가 등록되지 않았어요'
-//     }
+    const newsletter = await newsletterCreator.create(freshArticles)
+    saveNewsletter(newsletter)
+}
 
-//     if (!isProvidersValid()) {
-//         return '어떤 출처에서 글을 받아올까요?'
-//     }
+async function getArticles() {
+    const me = await User.getMe()
+    const articlesByProvider = new Map(
+        await Promise.all(
+            me.usingProviders.map(
+                async (provider: Provider) =>
+                    [
+                        provider.id,
+                        dismissUsedArticles(
+                            await getProviderArticles(provider)
+                        ),
+                    ] as const
+            )
+        )
+    )
 
-//     return '신선한 뉴스레터를 굽고있어요'
-// }
+    return [...getArticleWithMaxAmount(articlesByProvider).values()].flat()
+}
 
-// const App = () => {
-//     return (
-//         <>
-//             <Switch
-//                 fallback={
-//                     <>
-//                         <Spinner color="var(--bk-color-l4)" />
-//                         <sh-title>{getTitle()}</sh-title>
-//                         <Switch
-//                             fallback={
-//                                 <>
-//                                     <sh-card>
-//                                         <sh-subtitle>내 관심사</sh-subtitle>
-//                                         <sh-horz gap={1} linebreak>
-//                                             <For each={interests()}>
-//                                                 {(interest) => (
-//                                                     <sh-chip>
-//                                                         {interest}
-//                                                     </sh-chip>
-//                                                 )}
-//                                             </For>
-//                                         </sh-horz>
-//                                     </sh-card>
-//                                     <sh-button attr:type="ghost">
-//                                         <img src={editIcon} />
-//                                         수정
-//                                     </sh-button>
-//                                 </>
-//                             }
-//                         >
-//                             <Match when={!isInterestValid()}>
-//                                 <InterestEditor />
-//                                 <sh-button
-//                                     size="big"
-//                                     class={popAppearProgressiveStyle}
-//                                     onClick={refetchInterests}
-//                                 >
-//                                     <img
-//                                         src="/shade-ui/icons/Send.svg"
-//                                         alt="전송 아이콘"
-//                                     />
-//                                     입력 완료
-//                                 </sh-button>
-//                             </Match>
-//                             <Match when={!isProvidersValid()}>
-//                                 <provider-editor />
-//                             </Match>
-//                         </Switch>
-//                         <sh-vert gap={2}>
-//                             <For each={generationLog()}>
-//                                 {(logline) => (
-//                                     <sh-text
-//                                         L6
-//                                         class={popAppearProgressiveStyle}
-//                                     >
-//                                         {logline}
-//                                     </sh-text>
-//                                 )}
-//                             </For>
-//                         </sh-vert>
-//                     </>
-//                 }
-//             >
-//                 <Match when={newsletterContent()}>
-//                     <Show when={isPreviousNewsletter()}>
-//                         <info-card>
-//                             아직 새 소식이 충분하지 않아요. 이전 뉴스레터를
-//                             보여드릴게요
-//                         </info-card>
-//                     </Show>
-//                     <gradual-renderer
-//                         attr:content={newsletterContent()}
-//                         attr:referring-article={JSON.stringify(
-//                             referringArticles()
-//                         )}
-//                     />
-//                     <Show when={isFeedbackPanelVisible()}>
-//                         <FeedbackPanel />
-//                     </Show>
-//                 </Match>
-//             </Switch>
-//         </>
-//     )
-// }
+async function getProviderArticles(provider: Provider) {
+    try {
+        const articles = await provider.getArticles()
+        setLogs((prev) => [...prev, `${provider.name} 읽었어요`])
 
-// const renderTarget = document.getElementById('app')
-// assert(renderTarget, 'Cannot find renderTarget #app in this document')
-
-// render(() => <App />, renderTarget)
-
-// createEffect(() => {
-//     if (isInterestValid() && isProvidersValid()) {
-//         renderNewsletter()
-//     }
-// })
-
-// async function renderNewsletter() {
-//     if (!isInterestValid()) {
-//         return
-//     }
-
-//     const articles = await getArticlesFromProviders(usingProviders()!)
-//     setTimeout(
-//         () =>
-//             setGenerationLog((prev) => [
-//                 ...prev,
-//                 '어떤 글을 좋아할지 고민하고 있어요',
-//             ]),
-//         500
-//     )
-
-//     if (articles.length < 5) {
-//         setGenerationLog((prev) => [...prev, '아직 새 소식이 충분하지 않아요'])
-//         const lastNewsletter = getLastNewsletter()
-
-//         setReferringArticles(lastNewsletter.relatedArticles)
-//         setNewsletterContent(lastNewsletter.content)
-
-//         setIsPreviousNewsletter(true)
-//     } else {
-//         await createNewsletterFromArticles(articles, {
-//             token: (token) => {
-//                 setNewsletterContent((prev) => prev + token)
-//             },
-//             relatedArticles: (articles) => {
-//                 setReferringArticles(articles)
-//                 setGenerationLog((prev) => [
-//                     ...prev,
-//                     '뉴스레터를 작성하고 있어요',
-//                 ])
-//             },
-//         })
-//     }
-
-//     setFeedbackPanelVisiblity(true)
-// }
-
-// async function getArticlesFromProviders(providers: ContentProvidersResponse[]) {
-//     const articlesByProviders = new Map<string, Article[]>()
-
-//     // for (const provider of providers) {
-
-//     // }
-
-//     await Promise.all(
-//         providers.map(async (provider) => {
-//             // getFreshArticles(provider)
-//             //     .then((freshArticles) => {
-//             //         setGenerationLog((prev) => [
-//             //             ...prev,
-//             //             provider.name + ' 읽었어요',
-//             //         ])
-//             //         articlesByProviders.set(provider.id, freshArticles)
-//             //     })
-//             //     .catch(() => {
-//             //         setGenerationLog((prev) => [
-//             //             ...prev,
-//             //             provider.name + ' 읽는 중 오류가 발생했어요',
-//             //         ])
-//             //     })
-
-//             try {
-//                 const freshArticles = await getFreshArticles(provider)
-
-//                 setGenerationLog((prev) => [
-//                     ...prev,
-//                     provider.name + ' 읽었어요',
-//                 ])
-
-//                 articlesByProviders.set(provider.id, freshArticles)
-//             } catch (e) {
-//                 setGenerationLog((prev) => [
-//                     ...prev,
-//                     provider.name + ' 읽는 중 오류가 발생했어요',
-//                 ])
-//             }
-//         })
-//     )
-
-//     const articleMap = getArticleWithMaxAmount(articlesByProviders)
-//     return [...articleMap.values()].flat()
-// }
-
-// function getArticleWithMaxAmount(
-//     articlesMap: Map<string, Article[]>,
-//     maxArticles = 100
-// ) {
-//     while (true) {
-//         const articleAmount = getArticleAmounts(articlesMap)
-
-//         if (articleAmount <= maxArticles) {
-//             break
-//         }
-
-//         const maxProviders = getMaxProvider(articlesMap)
-
-//         const articles = articlesMap.get(maxProviders)
-
-//         if (!articles) {
-//             break
-//         }
-
-//         articlesMap.set(maxProviders, articles.slice(0, articles.length - 1))
-//     }
-
-//     return articlesMap
-// }
-
-// function getMaxProvider(articlesByProviders: Map<string, Article[]>) {
-//     let maxProviderId = ''
-//     let maxProviderArticleCount = 0
-
-//     for (const [providerId, articles] of articlesByProviders) {
-//         if (articles.length > maxProviderArticleCount) {
-//             maxProviderId = providerId
-//             maxProviderArticleCount = articles.length
-//         }
-//     }
-
-//     return maxProviderId
-// }
-
-// function getArticleAmounts(articlesByProviders: Map<string, Article[]>) {
-//     return [...articlesByProviders.values()].reduce(
-//         (acc, articles) => acc + articles.length,
-//         0
-//     )
-// }
+        return articles
+    } catch (e) {
+        setLogs((prev) => [
+            ...prev,
+            `${provider.name} 읽는 중 오류가 발생했어요`,
+        ])
+        return []
+    }
+}

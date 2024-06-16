@@ -1,7 +1,7 @@
-import { pb } from '@/db'
+import { pb } from '@/utils/db'
 import { setUsingProviderIds, usingProviderIds } from './widgets/storage'
 import { Collections } from '@/pocketbase-types'
-import { getMe } from '@utils/getMe'
+import { User } from '@/entity/user'
 
 export default {
     async onChange(
@@ -11,7 +11,7 @@ export default {
             target: HTMLInputElement
         }
     ) {
-        await getMe.call()
+        await User.getMe()
 
         const modification = e.target.checked ? 'add' : 'remove'
 
@@ -36,7 +36,7 @@ export default {
         this.saveProviderList(newUsingProviderIds)
     },
     async saveProviderList(newUsingProviderIds: string[]) {
-        const me = await getMe.call()
+        const me = await User.getMe()
         setUsingProviderIds(newUsingProviderIds)
 
         await pb.collection(Collections.Users).update(me.id, {

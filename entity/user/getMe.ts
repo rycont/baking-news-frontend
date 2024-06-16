@@ -1,7 +1,8 @@
-import { pb } from '../db'
-import { ContentProvidersResponse, UsersResponse } from '../pocketbase-types'
-import { assert } from './assert'
-import { CachedFunction } from './cachedFunction'
+import { CachedFunction } from '@utils/cachedFunction'
+import { pb } from '@utils/db'
+
+import { UsersResponse, ContentProvidersResponse } from '@/pocketbase-types'
+import { assert } from '@utils/assert'
 
 export const getMe = new CachedFunction(async () => {
     try {

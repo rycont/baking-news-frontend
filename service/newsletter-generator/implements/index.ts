@@ -1,30 +1,22 @@
-import { Article } from '@/types/article'
-import { NewsletterCreationEvents, NewsletterCreator } from './interface'
+import { pb } from '@utils/db'
+
 import { Newsletter } from '@/types/newsletter'
-import { pb } from '@/db'
-import { getMe } from '@utils/getMe'
-import { PubSub } from '@/types/pubsub'
-import { Prettify } from '@/types/prettify'
+import { Article } from '@/types/article'
 
-export class LLMNewsletterCreator implements NewsletterCreator {
-    public pubsub = new PubSub<Prettify<NewsletterCreationEvents>>()
-    private socket: WebSocket | null = null
+import { NewsletterCreator } from '../interface'
+import { User } from '@/entity/user'
 
-    constructor(private articles: Article[]) {}
+export class LLMNewsletterCreator extends NewsletterCreator {
+    private socket?: WebSocket
+    private articles?: Article[]
 
-    create(events: NewsletterCreationEvents): Promise<Newsletter> {
-        this.pubsub.sub('token', (token) => {
-            events.token(token)
-        })
+    constructor() {
+        super()
+        console.info('Using LLM newsletter creator.')
+    }
 
-        this.pubsub.sub('relatedArticles', (articles) => {
-            events.relatedArticles(articles)
-        })
-
-        this.pubsub.sub('finished', (newsletter) => {
-            events.finished(newsletter)
-        })
-
+    create(articles: Article[]): Promise<Newsletter> {
+        this.articles = articles
         this.socket = new WebSocket('wss://baked-api.deno.dev/ws')
 
         this.socket.addEventListener('open', this.onOpen.bind(this))
@@ -82,7 +74,7 @@ export class LLMNewsletterCreator implements NewsletterCreator {
     }
 
     private async getToken() {
-        await getMe.call()
+        await User.getMe()
         return pb.authStore.token
     }
 }

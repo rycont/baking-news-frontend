@@ -1,7 +1,7 @@
-import { pb } from '@/db'
-import { getMe } from '@utils/getMe'
+import { pb } from '@/utils/db'
 import { interestsSignal } from './storage'
 import { InterestItemView, InterestItemViewProps } from './item.view'
+import { User } from '@/entity/user'
 
 export default function InterestItem(props: { index: number }) {
     const value = () => interestsSignal.get()?.[props.index] || ''
@@ -26,7 +26,7 @@ export default function InterestItem(props: { index: number }) {
 }
 
 async function setInterests(index: number, newInterest: string) {
-    const me = await getMe.call()
+    const me = await User.getMe()
     let interests = interestsSignal.get() || []
 
     interests[index] = newInterest
@@ -36,7 +36,7 @@ async function setInterests(index: number, newInterest: string) {
 }
 
 async function removeInterest(index: number) {
-    const me = await getMe.call()
+    const me = await User.getMe()
     let interests = interestsSignal.get() || []
 
     interests = [...interests.slice(0, index), ...interests.slice(index + 1)]

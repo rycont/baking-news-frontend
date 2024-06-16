@@ -1,9 +1,9 @@
 import { Article } from '../../types/article'
-import { buildLinkCard } from '../../linkCard'
 import INLINE_LINK, { ShadeInlineLink } from '@shade/dist/elements/inline-link'
 import { TEXT_CONTENT, TITLE } from '@shade/dist/elements/typo'
 import { DefineOnce } from '@shade/util'
 import { rendererStyle, tokenAnimation } from './style.css'
+import { buildLinkCard } from '@components/link-card/build'
 
 export class GradualRenderer {
     renderQueue: string[] = []

@@ -1,9 +1,12 @@
 import { Article } from '@/types/article'
 import { Newsletter } from '@/types/newsletter'
+import { Prettify } from '@/types/prettify'
+import { PubSub } from '@/types/pubsub'
 
 export abstract class NewsletterCreator {
-    constructor(_articles: Article[]) {}
-    abstract create(events: NewsletterCreationEvents): Promise<Newsletter>
+    public pubsub = new PubSub<Prettify<NewsletterCreationEvents>>()
+
+    abstract create(articles: Article[]): Promise<Newsletter>
 }
 
 export interface NewsletterCreationEvents {

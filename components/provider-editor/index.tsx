@@ -1,8 +1,8 @@
-import { ContentProvidersResponse } from '@/pocketbase-types'
-import { getMe } from '@utils/getMe'
 import { customElement, noShadowDOM } from 'solid-element'
 import { createResource } from 'solid-js'
 import { ProviderEditorView } from './index.view'
+import { User } from '@/entity/user'
+import { Provider } from '@/entity/provider'
 
 function ProviderEditor() {
     const [usingProviders] = createResource(getUsingProviders)
@@ -14,9 +14,9 @@ function ProviderEditor() {
     return <ProviderEditorView usingProviders={usingProviderNames()} />
 }
 
-async function getUsingProviders(): Promise<ContentProvidersResponse[]> {
-    const me = await getMe.call()
-    const usingProviders = me.expand?.using_providers
+async function getUsingProviders(): Promise<Provider[]> {
+    const me = await User.getMe()
+    const usingProviders = me.usingProviders
 
     return usingProviders || []
 }

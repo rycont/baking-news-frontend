@@ -1,9 +1,10 @@
 import Parser from 'rss-parser/dist/rss-parser.min.js'
 
 import { dismissUsedArticles } from '@utils/freshArticles'
-import { Article } from '@/types/article'
+import { extFetch } from '@utils/extFetch'
 import { assert } from '@utils/assert'
-import { extFetch } from '@/extFetch'
+
+import { Article } from '@/types/article'
 
 import { RSSLoader } from '../interface'
 

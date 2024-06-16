@@ -1,16 +1,20 @@
 import { Article } from '@/types/article'
-import { NewsletterCreationEvents, NewsletterCreator } from './interface'
+import { NewsletterCreator } from '../interface'
 import { Newsletter } from '@/types/newsletter'
-import { addUsedArticles, dismissUsedArticles } from '@utils/freshArticles'
 
-export class NewsletterCreatorStub implements NewsletterCreator {
+export class MockNewsletterCreator extends NewsletterCreator {
     static TOKEN_INTERVAL = import.meta.env.VITE_FASTMOCK ? 10 : 40
-    constructor(private articles: Article[]) {}
-    async create(events: NewsletterCreationEvents): Promise<Newsletter> {
-        const freshArticles = dismissUsedArticles(this.articles)
-        const usingArticle = freshArticles.slice(0, 5)
 
-        events.relatedArticles(usingArticle)
+    constructor() {
+        super()
+        console.info('Using mocked newsletter creator.')
+    }
+
+    async create(articles: Article[]): Promise<Newsletter> {
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+        const usingArticle = articles.slice(0, 5)
+
+        this.pubsub.pub('relatedArticles', [usingArticle])
 
         const mockContent =
             usingArticle
@@ -30,21 +34,23 @@ ${article.link}라는 사실 알고 계셨나요? 꽤나 충격적이네요.`
             tokenQueue = tokenQueue.slice(5)
 
             await new Promise((resolve) =>
-                setTimeout(resolve, NewsletterCreatorStub.TOKEN_INTERVAL)
+                setTimeout(resolve, MockNewsletterCreator.TOKEN_INTERVAL)
             )
 
             if (!token) {
                 break
             }
 
-            events.token(token)
+            this.pubsub.pub('token', [token])
         }
 
-        addUsedArticles(usingArticle.map((article) => article.link))
-
-        return {
+        const mockedNewsletter = {
             content: mockContent,
             relatedArticles: usingArticle,
         }
+
+        this.pubsub.pub('finished', [mockedNewsletter])
+
+        return mockedNewsletter
     }
 }
