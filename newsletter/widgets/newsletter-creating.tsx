@@ -28,7 +28,7 @@ function NewsletterCreating(props: { interests: string[] }) {
             </sh-button>
 
             <sh-vert gap={2} class={popAppearProgressiveStyle}>
-                <For each={getLogs()}>
+                <For each={getLogs().toReversed()}>
                     {(logline) => (
                         <sh-text L6 class={popAppearStyle}>
                             {logline}
