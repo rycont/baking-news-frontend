@@ -22,6 +22,7 @@ export class RSSProvider implements Provider {
         source: {
             url: string
             name: string
+            id: string
             encoding?: string
         },
         private RSSLoader: RSSLoader = RSSProvider.DEFAULT_RSS_LOADER
@@ -30,7 +31,7 @@ export class RSSProvider implements Provider {
         this.url = source.url
         this.encoding = source.encoding
 
-        this.id = source.url
+        this.id = source.id
     }
 
     public async getArticles() {
@@ -47,7 +48,12 @@ export class RSSProvider implements Provider {
         }
     }
 
-    static fromJSON(json: { url: string; encoding?: string; name: string }) {
+    static fromJSON(json: {
+        url: string
+        encoding?: string
+        name: string
+        id: string
+    }) {
         return new RSSProvider(json)
     }
 }

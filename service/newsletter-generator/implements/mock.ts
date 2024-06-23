@@ -1,8 +1,8 @@
 import { Article } from '@/types/article'
-import { NewsletterCreator } from '../interface'
+import { NewsletterCreatorInterface } from '../interface'
 import { Newsletter } from '@/types/newsletter'
 
-export class MockNewsletterCreator extends NewsletterCreator {
+export class MockNewsletterCreator extends NewsletterCreatorInterface {
     static TOKEN_INTERVAL = import.meta.env.VITE_FASTMOCK ? 10 : 40
 
     constructor() {
@@ -11,7 +11,9 @@ export class MockNewsletterCreator extends NewsletterCreator {
     }
 
     async create(articles: Article[]): Promise<Newsletter> {
-        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await new Promise((resolve) =>
+            setTimeout(resolve, import.meta.env.VITE_FASTMOCK ? 300 : 3000)
+        )
         const usingArticle = articles.slice(0, 5)
 
         this.pubsub.pub('relatedArticles', [usingArticle])

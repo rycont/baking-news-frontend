@@ -1,7 +1,7 @@
 import mockResponse from './mock-response.json'
 import { RSSLoader } from '../interface'
 
-const SIMULATED_DELAY_MAX = import.meta.env.VITE_FASTMOCK ? 1000 : 10000
+const SIMULATED_DELAY_MAX = import.meta.env.VITE_FASTMOCK ? 300 : 10000
 
 const SIMULATED_DELAY_BIAS = import.meta.env.VITE_FASTMOCK ? 0 : 500
 

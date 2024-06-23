@@ -3,7 +3,7 @@ import { Newsletter } from '@/types/newsletter'
 import { Prettify } from '@/types/prettify'
 import { PubSub } from '@/types/pubsub'
 
-export abstract class NewsletterCreator {
+export abstract class NewsletterCreatorInterface {
     public pubsub = new PubSub<Prettify<NewsletterCreationEvents>>()
 
     abstract create(articles: Article[]): Promise<Newsletter>

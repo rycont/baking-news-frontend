@@ -1,28 +1,24 @@
-import { Show } from 'solid-js'
-import {
-    getIsStaleNewsletter,
-    getNewsletterContent,
-    getReferringArticle,
-    getIsEnd,
-} from '../storage'
-import { FeedbackPanel } from './feedback'
-import { popAppearStyle } from '@shade/theme.css'
+import '@/components/gradual-renderer'
+import { Article } from '@/types/article'
 
-function RenderNewsletter() {
+function RenderNewsletter(props: {
+    newsletterContent: string | null
+    relatedArticles: Article[]
+}) {
     return (
         <>
-            <Show when={getIsStaleNewsletter()}>
+            {/* <Show when={getIsStaleNewsletter()}>
                 <info-card class={popAppearStyle}>
                     아직 새 소식이 충분하지 않아요. 이전 뉴스레터를 보여드릴게요
                 </info-card>
-            </Show>
+            </Show> */}
             <gradual-renderer
-                attr:content={getNewsletterContent()}
-                attr:referring-article={JSON.stringify(getReferringArticle())}
+                attr:content={props.newsletterContent}
+                attr:referring-article={JSON.stringify(props.relatedArticles)}
             />
-            <Show when={getIsEnd() && !getIsStaleNewsletter()}>
+            {/* <Show when={getIsGenerationEnd() && !getIsStaleNewsletter()}>
                 <FeedbackPanel />
-            </Show>
+            </Show> */}
         </>
     )
 }

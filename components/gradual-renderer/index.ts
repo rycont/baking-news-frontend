@@ -252,7 +252,13 @@ export class GradualRendererComponent extends HTMLElement {
         }
 
         if (name === 'referring-article' && newValue) {
-            this.renderer.referringArticles = JSON.parse(newValue)
+            let referringArticles: Article[] = []
+
+            try {
+                referringArticles = JSON.parse(newValue)
+            } catch (e) {}
+
+            this.renderer.referringArticles = referringArticles
         }
     }
 }

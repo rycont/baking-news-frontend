@@ -3,10 +3,10 @@ import { pb } from '@utils/db'
 import { Newsletter } from '@/types/newsletter'
 import { Article } from '@/types/article'
 
-import { NewsletterCreator } from '../interface'
+import { NewsletterCreatorInterface } from '../interface'
 import { User } from '@/entity/user'
 
-export class LLMNewsletterCreator extends NewsletterCreator {
+export class LLMNewsletterCreator extends NewsletterCreatorInterface {
     private socket?: WebSocket
     private articles?: Article[]
 
